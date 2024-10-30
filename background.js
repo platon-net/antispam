@@ -3,9 +3,23 @@
 // persistent listener and the background will wake up (restart) each time the
 // event is fired.
 
-browser.messageDisplay.onMessageDisplayed.addListener((tab, message) => {
+// browser.messageDisplay.onMessageDisplayed.addListener((tab, message) => {
 	// console.log(`Message displayed in tab ${tab.id}: ${message.subject}`);
-});
+// });
+
+function webserviceEndpoint() {
+	var endpoint = localStorage.getItem('webservice_endpoint_url');
+	if (endpoint == null
+		|| endpoint == undefined)
+	{
+		return '';
+	}
+	return endpoint;
+}
+
+function isSetWebserviceEndpoint() {
+	return webserviceEndpoint().length > 0;
+}
 
 function appendFormData(formData, data, parentKey = '') {
 	if (data && typeof data === 'object' && !(data instanceof Date) && !(data instanceof File)) {
@@ -18,7 +32,7 @@ function appendFormData(formData, data, parentKey = '') {
 }
 
 function webservice(service, params, callback) {
-	var webservice_endpoint_url = localStorage.getItem('webservice_endpoint_url')+'?ws='+service;
+	var webservice_endpoint_url = webserviceEndpoint()+'?ws='+service;
 	var form_data  = new FormData();
 	// Object.keys(params).forEach(key => {
 	// 	form_data.append(key, params[key]);
@@ -36,6 +50,12 @@ function webservice(service, params, callback) {
 }
 
 function antispamAdd(maildata, callback) {
+	if (!isSetWebserviceEndpoint()) {
+		if (callback != null) {
+			callback({'success': false, 'message': browser.i18n.getMessage('webservceURLnotSet')});
+		}
+		return false;
+	}
 	webservice('antispam', {action: 'add', maildata: maildata}, function(response){
 		var result = {};
 		if (response.status == 'OK') {

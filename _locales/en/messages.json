@@ -40,5 +40,8 @@
 	},
 	"close": {
 		"message": "Close"
+	},
+	"webservceURLnotSet": {
+		"message": "URL for webservice is not set."
 	}
 }

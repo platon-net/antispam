@@ -40,5 +40,8 @@
 	},
 	"close": {
 		"message": "Zatvor"
+	},
+	"webservceURLnotSet": {
+		"message": "URL pre webovu službu nie je nastavená."
 	}
 }

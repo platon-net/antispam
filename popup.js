@@ -3,8 +3,9 @@ browser.tabs.query({
 	currentWindow: true,
 }).then(tabs => {
 	let tabId = tabs[0].id;
-	browser.messageDisplay.getDisplayedMessages(tabId).then(([message]) => {
-		// console.log(message);
+	// console.log(messenger);
+	messenger.messageDisplay.getDisplayedMessages(tabId).then((message_list) => {
+		var message = message_list.messages[0];
 		document.getElementById('antispam_recipients').value = message.recipients.join(', ');
 		document.getElementById('antispam_sender').value = message.author;
 		document.getElementById('antispam_subject').value = message.subject;
@@ -41,7 +42,7 @@ function antispamAdd(maildata, callback) {
 			if (response.result != null
 				&& response.result.message != null)
 			{
-				result_html += ': '.response.result.message;
+				result_html += ': ' + response.result.message;
 			}
 		} else {
 			result_html = response.message;
