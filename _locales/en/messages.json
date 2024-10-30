@@ -1,0 +1,44 @@
+{
+	"name": {
+		"message": "Antispam"
+	},
+	"description": {
+		"message": "Sending email to the Antispam database"
+	},
+	"sendToDB": {
+		"message": "Send to Antispam database"
+	},
+	"header": {
+		"message": "Send to Antispam database"
+	},
+	"recipients": {
+		"message": "Recipients"
+	},
+	"sender": {
+		"message": "Sender"
+	},
+	"subject": {
+		"message": "Subject"
+	},
+	"send": {
+		"message": "Send"
+	},
+	"enable": {
+		"message": "Enable"
+	},
+	"disable": {
+		"message": "Disable"
+	},
+	"webserviceEndpointURL": {
+		"message": "URL of webservice"
+	},
+	"save": {
+		"message": "Save"
+	},
+	"saveLabel": {
+		"message": "The settings have been saved."
+	},
+	"close": {
+		"message": "Close"
+	}
+}

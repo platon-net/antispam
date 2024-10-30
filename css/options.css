@@ -1,0 +1,36 @@
+body {
+    background-color: white;
+    color: black;
+	min-height: 250px;
+}
+input {
+	width: 95%;
+	padding: 5px;
+}
+button {
+	background-color: #484854; /*#33323A;*/
+	color: white;
+	border: none;
+	padding: 5px;
+}
+button:hover {
+	background-color: #5C5C6A; /*#3B3A41;*/
+}
+.right {
+	float: right;
+}
+.hide {
+	display: none;
+}
+
+@media (prefers-color-scheme: dark) {
+    body {
+        background-color: #23222B;
+        color: white;
+    }
+	input, textarea {
+		background-color: #1C1B22;
+		border: 1px #4E4D54 solid;
+		color: white;
+	}
+}

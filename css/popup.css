@@ -1,0 +1,28 @@
+#antispam .antispam_icon {
+	width: 20px;
+	height: 20px;
+	position: relative;
+}
+#antispam h1 {
+	margin: 0px;
+	margin-bottom: 5px;
+	font-size: 20px;
+}
+#antispam .attribute {
+	display: flex;
+	flex-direction: row;
+	margin-bottom: 5px;
+}
+#antispam .attribute .name {
+	width: 100px;
+}
+#antispam .attribute .value {
+	width: 400px;
+}
+#antispam .attribute .value input[type="text"]{
+	width: 95%;
+}
+#antispam #antispam_button_send {
+	float: right;
+	margin-right: 5px;
+}

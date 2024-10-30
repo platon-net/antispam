@@ -1,0 +1,48 @@
+{
+	"manifest_version": 3,
+	"name": "Antispam",
+	"description": "__MSG_description__",
+	"version": "1.0",
+	"author": "Platon Technologies",
+	"developer": {
+		"name": "Platon Technologies",
+		"url": "https://github.com/igorplaton/antispam"
+	},
+	"icons": {
+		"48": "images/icon.svg?4",
+		"96": "images/icon.svg?4"
+	},
+	"browser_specific_settings": {
+		"gecko": {
+			"id": "antispam@platon.sk",
+			"strict_min_version": "115.0"
+		}
+	},
+	"default_locale": "en",
+	"permissions": [
+		"messagesRead",
+		"storage",
+		"webRequest",
+		"webRequestBlocking"
+	],
+	"host_permissions": [
+		"http://*/*",
+		"https://*/*"
+	],
+
+	"background": {
+		"scripts": [
+			"background.js"
+		],
+		"type": "module"
+	},
+	"message_display_action": {
+		"default_popup": "popup.html",
+		"default_title": "__MSG_sendToDB__",
+		"default_icon": "images/icon.svg?4"
+	},
+	"options_ui": {
+		"page": "options.html",
+		"browser_style": false
+	}
+}

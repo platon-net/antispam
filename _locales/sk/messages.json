@@ -1,0 +1,44 @@
+{
+	"name": {
+		"message": "Antispam"
+	},
+	"description": {
+		"message": "Odosielanie e-mailu do Antispam databazy"
+	},
+	"sendToDB": {
+		"message": "Odoslať do Antispam databázy"
+	},
+	"header": {
+		"message": "Odoslať do Antispam databázy"
+	},
+	"recipients": {
+		"message": "Príjemcovia"
+	},
+	"sender": {
+		"message": "Odosielateľ"
+	},
+	"subject": {
+		"message": "Predmet"
+	},
+	"send": {
+		"message": "Odoslať"
+	},
+	"enable": {
+		"message": "Povoliť"
+	},
+	"disable": {
+		"message": "Zakázať"
+	},
+	"webserviceEndpointURL": {
+		"message": "URL webovej služby"
+	},
+	"save": {
+		"message": "Uložiť"
+	},
+	"saveLabel": {
+		"message": "Nastavenia boli uložené."
+	},
+	"close": {
+		"message": "Zatvor"
+	}
+}
