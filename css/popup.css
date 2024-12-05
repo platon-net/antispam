@@ -14,10 +14,10 @@
 	margin-bottom: 5px;
 }
 #antispam .attribute .name {
-	width: 100px;
+	width: 180px;
 }
 #antispam .attribute .value {
-	width: 400px;
+	width: 320px;
 }
 #antispam .attribute .value input[type="text"]{
 	width: 95%;

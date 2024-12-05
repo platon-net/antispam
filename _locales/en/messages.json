@@ -17,8 +17,20 @@
 	"sender": {
 		"message": "Sender"
 	},
+	"sender_domain": {
+		"message": "Domain of sender"
+	},
+	"replyto": {
+		"message": "Reply to address"
+	},
+	"replyto_domain": {
+		"message": "Domain for reply to"
+	},
 	"subject": {
 		"message": "Subject"
+	},
+	"ipaddresses": {
+		"message": "IP adresses"
 	},
 	"send": {
 		"message": "Send"

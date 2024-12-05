@@ -17,8 +17,20 @@
 	"sender": {
 		"message": "Odosielateľ"
 	},
+	"sender_domain": {
+		"message": "Doména odosielateľa"
+	},
+	"replyto": {
+		"message": "Adresa pre odpoveď"
+	},
+	"replyto_domain": {
+		"message": "Doména pre odpoveď"
+	},
 	"subject": {
 		"message": "Predmet"
+	},
+	"ipaddresses": {
+		"message": "IP adresy"
 	},
 	"send": {
 		"message": "Odoslať"
