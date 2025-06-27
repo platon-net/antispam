@@ -55,5 +55,20 @@
 	},
 	"webservceURLnotSet": {
 		"message": "URL for webservice is not set."
+	},
+	"headerAnalyze": {
+		"message": "Analyze of folder"
+	},
+	"openAnalyze": {
+		"message": "Analyze of folder"
+	},
+	"runAnalyze": {
+		"message": "Run analyze"
+	},
+	"ID": {
+		"message": "ID"
+	},
+	"actions": {
+		"message": "Actions"
 	}
 }

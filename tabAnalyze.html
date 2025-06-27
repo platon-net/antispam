@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta charset="utf-8" />
+	<title>__MSG_openAnalyze__</title>
+	<link rel="icon" href="images/icon.svg" type="image/svg+xml">
+	<link rel="stylesheet" href="css/tab.css">
+	<script type="text/javascript" src="i18n.js" defer="true"></script>
+	<script type="text/javascript" src="functions.js" defer="true"></script>
+	<script type="text/javascript" src="tabAnalyze.js" defer="true"></script>
+</head>
+
+<body id="antispam">
+	<h1>
+		<img src="images/icon.svg" width="20" height="20" alt="Antispam icon" id="antispam_icon">
+		__MSG_headerAnalyze__
+		<span id="antispam_folder_name"></span>
+	</h1>
+
+	<button id="antispam_button_run_analyze">__MSG_runAnalyze__</button>
+	<div id="processing"></div>
+	<br>
+
+	<table id="antispam_messages">
+		<thead>
+			<tr>
+				<th>__MSG_ID__</th>
+				<th>__MSG_sender__</th>
+				<th>__MSG_sender_domain__</th>
+				<th>__MSG_recipients__</th>
+				<th>__MSG_subject__</th>
+				<th>__MSG_ipaddresses__</th>
+				<th>__MSG_actions__</th>
+			</tr>
+		</thead>
+		<tbody id="messages"></tbody>
+	</table>
+</body>
+
+</html>

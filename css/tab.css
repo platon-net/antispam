@@ -1,0 +1,47 @@
+:root {
+	--color-bg1: #484854;
+	--color-bg2: #dfdfe7;
+	--color-bg3: #d7d7f8;
+	--color-text1: white;
+	--color-text2: black;
+}
+.antispam_icon {
+	width: 20px;
+	height: 20px;
+	position: relative;
+}
+h1 {
+	font-size: 20px;
+	margin-top: 10px;
+	margin-bottom: 10px;
+}
+table {
+	width: 100%;
+	border-collapse: collapse;
+}
+table thead {
+	background-color: var(--color-bg1);
+	color: var(--color-text1);
+}
+table th {
+	padding: 10px;
+	border: none;
+	text-align: left;
+}
+table tbody tr {
+	background-color: var(--color-bg2);
+	color: var(--color-text2);
+	transition: all 0.3s ease-in-out;
+}
+table tbody tr:nth-child(even) {
+	background-color: var(--color-bg3);
+}
+table tbody tr:hover {
+	filter: brightness(0.8);
+}
+table tbody tr td {
+	padding: 10px;
+	border: none;
+	text-align: left;
+	color: var(--color-text2);
+}

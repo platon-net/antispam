@@ -21,17 +21,15 @@
 	"default_locale": "en",
 	"permissions": [
 		"messagesRead",
-		"storage"
+		"storage",
+		"activeTab",
+		"tabs",
+		"accountsRead"
 	],
-	"host_permissions": [
-		"http://*/*",
-		"https://*/*"
-	],
+	"host_permissions": ["http://*/*", "https://*/*"],
 
 	"background": {
-		"scripts": [
-			"background.js"
-		],
+		"scripts": ["functions.js", "background.js"],
 		"type": "module"
 	},
 	"message_display_action": {
@@ -42,5 +40,18 @@
 	"options_ui": {
 		"page": "options.html",
 		"browser_style": false
-	}
+	},
+	"action": {
+		"default_title": "Antispam",
+		"default_icon": {
+			"16": "images/icon.svg?4"
+		},
+		"default_popup": "action.html"
+	},
+	"web_accessible_resources": [
+		{
+			"resources": ["tabAnalyze.html"],
+			"matches": ["<all_urls>"]
+		}
+	]
 }

@@ -55,5 +55,20 @@
 	},
 	"webservceURLnotSet": {
 		"message": "URL pre webovu službu nie je nastavená."
+	},
+	"headerAnalyze": {
+		"message": "Analýza priečinku"
+	},
+	"openAnalyze": {
+		"message": "Analyzovať priečinok"
+	},
+	"runAnalyze": {
+		"message": "Spustiť analyzu"
+	},
+	"ID": {
+		"message": "ID"
+	},
+	"actions": {
+		"message": "Akcie"
 	}
 }

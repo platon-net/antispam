@@ -68,6 +68,35 @@ function antispamAdd(maildata, callback) {
 	});
 }
 
+async function folderAnalyze(params, callback) {
+	console.log("folderAnalyze");
+	let result = {status: 'OK'};
+	let folder = await browser.folders.get(params.folderID);
+	if (folder == null) {
+		result.status = 'ERROR';
+		result.msg = 'Folder not exists';
+		if (callback != null) callback(result);
+		return false;
+	}
+	result.folder = folder;
+	let messages = await browser.messages.query({
+		folderId: params.folderID,
+		read: false,
+	});
+	if (messages == null) {
+		result.status = 'ERROR';
+		result.msg = 'Message query failed';
+		if (callback != null) callback(result);
+		return false;
+	}
+	console.log("messages", messages);
+	result.unread = messages.messages;
+	for (var i = 0; i < result.unread.length; i++) {
+		let message_full = await browser.messages.getFull(result.unread[i].id);
+		result.unread[i].full = message_full;
+	}
+	if (callback != null) callback(result);
+}
 
 browser.runtime.onMessage.addListener(
 	function(request, sender, sendResponse) {
@@ -78,8 +107,13 @@ browser.runtime.onMessage.addListener(
 					sendResponse(result);
 				});
 				break;
+			case 'analyzeRun':
+				folderAnalyze(request.params, function(result){
+					sendResponse(result);
+				});
+				break;
 			default:
-				sendResponse({});
+				sendResponse({'msg': 'Unknown request'});
 				break;
 		}
 		return true;
