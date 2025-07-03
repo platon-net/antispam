@@ -11,7 +11,7 @@ function getDomainFromEmail(email) {
 	return domain;
 }
 
-function extractIPAddresses(text)  {
+function extractIPAddresses(text) {
 	let ignored_ip = ["127.0.0.1", "192.168."];
 	if (Array.isArray(text)) {
 		let ips = [];
@@ -62,4 +62,15 @@ function tableAdd(table_id, data) {
 		tr.appendChild(td);
 	}
 	tbody.appendChild(tr);
+}
+
+function requestSitePermission(url, callback) {
+	const origin = url.replace(/\/?\*?$/, "/*");
+	browser.permissions.request({
+		origins: [origin],
+	}).then(granted => {
+		if (callback != null) {
+			callback(granted);
+		}
+	});
 }
