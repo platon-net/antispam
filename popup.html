@@ -11,6 +11,7 @@
 </head>
 
 <body id="antispam">
+
 	<div id="buttons">
 		<button id="button_form_info_show">__MSG_form_info_show__</button>
 		<button id="button_form_summary_show">__MSG_form_summary_show__</button>
@@ -21,8 +22,10 @@
 			<div class="name">__MSG_sender__</div>
 			<div class="value"><button id="info_copy_sender" title="__MSG_copy_to_clipboard__"><img
 						src="images/copy.svg" alt="__MSG_copy_to_clipboard__" width="20" height="20"></button>
-				<button id="info_filter_sender" title="__MSG_filter__"><img src="images/filter.svg"
-						alt="__MSG_filter__" width="20" height="20"></button>
+				<button id="info_filter_sender" title="__MSG_filter__"><img src="images/filter.svg" alt="__MSG_filter__"
+						width="20" height="20"></button>
+				<button id="info_create_rule_sender" title="__MSG_create_rule__"><img src="images/stop-urgent.svg" alt="__MSG_create_rule__"
+						width="20" height="20"></button>
 				<span id="info_sender"></span>
 			</div>
 		</div>
@@ -30,7 +33,6 @@
 			<div class="name">__MSG_sender_domain__</div>
 			<div class="value" id="info_sender_subdomains"><span id="info_sender_domain"></span></div>
 		</div>
-
 	</div>
 
 	<div id="form_summary" class="form hide">
@@ -84,6 +86,17 @@
 				</tr>
 			</tbody>
 		</table>
+	</div>
+
+	<div id="webservice" class="form hide">
+		__MSG_loading__
+	</div>
+
+	<div id="question" class="form hide">
+		<div id="question_text"></div>
+		<button id="question_button_yes">__MSG_yes__</button>
+		&nbsp;&nbsp;&nbsp;
+		<button id="question_button_no">__MSG_no__</button>
 	</div>
 
 </body>

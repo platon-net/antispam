@@ -63,6 +63,9 @@ document.addEventListener("DOMContentLoaded", function () {
 			switchForm("form_summary");
 		});
 
+	/* ----------------------------------------------------
+	 * Buttons Info
+	 */
 	document
 		.getElementById("info_copy_sender")
 		.addEventListener("click", function () {
@@ -78,6 +81,15 @@ document.addEventListener("DOMContentLoaded", function () {
 			filterSender(document.getElementById("info_sender").innerText);
 		});
 
+	document
+		.getElementById("info_create_rule_sender")
+		.addEventListener("click", function () {
+			antispamEmailruleQuestion(
+				"sender_email",
+				document.getElementById("info_sender").innerText
+			);
+		});
+
 	/* ----------------------------------------------------
 	 * Button Send onClick
 	 */
@@ -90,7 +102,23 @@ document.addEventListener("DOMContentLoaded", function () {
 				subject: document.getElementById("antispam_subject").value,
 			};
 			document.body.textContent = "Sending...";
-			antispamAdd(maildata);
+			antispamAddMaildata(maildata);
+		});
+
+	/* ----------------------------------------------------
+	 * Buttons Question
+	 */
+	document
+		.getElementById("question_button_yes")
+		.addEventListener("click", function (event) {
+			if (question_callback_last != null) question_callback_last(true);
+			question_callback_last = null;
+		});
+	document
+		.getElementById("question_button_no")
+		.addEventListener("click", function (event) {
+			if (question_callback_last != null) question_callback_last(false);
+			question_callback_last = null;
 		});
 });
 
@@ -101,23 +129,49 @@ function switchForm(form_id) {
 	document.getElementById(form_id).classList.remove("hide");
 }
 
-function antispamAdd(maildata, callback) {
-	browser.runtime.sendMessage(
-		{ name: "antispamAdd", maildata: maildata },
-		function (response) {
-			// console.log(response);
-			var result_html = "N/A";
-			if (response.success == true) {
-				result_html = "OK";
-				if (response.result != null && response.result.message != null) {
-					result_html += ": " + response.result.message;
-				}
-			} else {
-				result_html = response.message;
-			}
-			document.body.textContent = result_html;
+function webserviceResponseHandler(response) {
+	// console.log(response);
+	var result_html = "N/A";
+	if (response.success == true) {
+		result_html = "OK";
+		if (response.result != null && response.result.message != null) {
+			result_html += ": " + response.result.message;
 		}
+	} else {
+		result_html = response.message;
+	}
+	document.getElementById("webservice").innerHTML = result_html;
+}
+
+function antispamAddMaildata(maildata) {
+	switchForm("webservice");
+	document.getElementById("webservice").innerText =
+		browser.i18n.getMessage("loading");
+	browser.runtime.sendMessage(
+		{ name: "antispamAddMaildata", maildata: maildata },
+		webserviceResponseHandler
 	);
+}
+
+function antispamEmailrule(type, pattern) {
+	switchForm("webservice");
+	document.getElementById("webservice").innerText =
+		browser.i18n.getMessage("loading");
+	browser.runtime.sendMessage(
+		{ name: "antispamEmailrule", type: type, pattern: pattern },
+		webserviceResponseHandler
+	);
+}
+
+function antispamEmailruleQuestion(type, pattern) {
+	question("Create rule?", function (result) {
+		console.log("vyhodnocujem");
+		if (result) {
+			antispamEmailrule(type, pattern);
+		} else {
+			switchForm("form_info");
+		}
+	});
 }
 
 function subdomainLine(subdomain) {
@@ -155,6 +209,22 @@ function subdomainLine(subdomain) {
 
 	button_filter.appendChild(img_filter);
 
+	// Create a button for create rule
+	const button_rule = document.createElement("button");
+	button_rule.id = "info_create_rule_subdomain";
+	button_rule.title = browser.i18n.getMessage("create_rule");
+	button_rule.addEventListener("click", function (event) {
+		antispamEmailruleQuestion("sender_domain", subdomain);
+	});
+
+	const img_rule = document.createElement("img");
+	img_rule.src = "images/stop-urgent.svg";
+	img_rule.alt = browser.i18n.getMessage("create_rule");
+	img_rule.width = 20;
+	img_rule.height = 20;
+
+	button_rule.appendChild(img_rule);
+
 	// Create text Subdomain
 	const span = document.createElement("span");
 	span.textContent = " " + subdomain + " ";
@@ -189,7 +259,10 @@ function subdomainLine(subdomain) {
 
 	// Join to one row
 	line.appendChild(button);
+	line.appendChild(document.createTextNode(" "));
 	line.appendChild(button_filter);
+	line.appendChild(document.createTextNode(" "));
+	line.appendChild(button_rule);
 	line.appendChild(span);
 	line.appendChild(bracketStart);
 	line.appendChild(aHttp);
@@ -217,7 +290,7 @@ function filterSender(sender) {
 
 function filterDomain(domain) {
 	filterMessages({
-		fullText: "@"+domain,
+		fullText: "@" + domain,
 	});
 }
 
@@ -255,6 +328,15 @@ async function filterMessages(queryParams) {
 	}
 	if (msgs.messages.length == 0) {
 		document.getElementById("messagelist_messages").innerHTML =
-			'<tr><td colspan="4">' + browser.i18n.getMessage("search_empty") + "</td></tr>";
+			'<tr><td colspan="4">' +
+			browser.i18n.getMessage("search_empty") +
+			"</td></tr>";
 	}
+}
+
+var question_callback_last = null;
+function question(text, callback) {
+	question_callback_last = callback;
+	switchForm("question");
+	document.getElementById("question_text").textContent = text;
 }

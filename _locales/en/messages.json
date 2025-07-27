@@ -94,5 +94,14 @@
 	},
 	"date": {
 		"message": "Date"
+	},
+	"create_rule": {
+		"message": "Create rule"
+	},
+	"yes": {
+		"message": "Yes"
+	},
+	"no": {
+		"message": "No"
 	}
 }

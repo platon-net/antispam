@@ -94,5 +94,14 @@
 	},
 	"date": {
 		"message": "Dátum"
+	},
+	"create_rule": {
+		"message": "Vytvorit pravidlo"
+	},
+	"yes": {
+		"message": "Áno"
+	},
+	"no": {
+		"message": "Nie"
 	}
 }
