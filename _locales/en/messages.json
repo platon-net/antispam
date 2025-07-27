@@ -76,5 +76,23 @@
 	},
 	"actions": {
 		"message": "Actions"
+	},
+	"copy_to_clipboard": {
+		"message": "Copy to clipboard"
+	},
+	"filter": {
+		"message": "Filter"
+	},
+	"loading": {
+		"message": "Loading ..."
+	},
+	"search_failed": {
+		"message": "Search failed."
+	},
+	"search_empty": {
+		"message": "No information found."
+	},
+	"date": {
+		"message": "Date"
 	}
 }

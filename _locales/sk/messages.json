@@ -76,5 +76,23 @@
 	},
 	"actions": {
 		"message": "Akcie"
+	},
+	"copy_to_clipboard": {
+		"message": "Kopírovať do schránky"
+	},
+	"filter": {
+		"message": "Filtrovať"
+	},
+	"loading": {
+		"message": "Načítava sa ..."
+	},
+	"search_failed": {
+		"message": "Hlľadanie zlyhalo."
+	},
+	"search_empty": {
+		"message": "Nenašla sa žiadna informácia."
+	},
+	"date": {
+		"message": "Dátum"
 	}
 }

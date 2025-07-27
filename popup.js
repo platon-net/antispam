@@ -72,6 +72,12 @@ document.addEventListener("DOMContentLoaded", function () {
 			);
 		});
 
+	document
+		.getElementById("info_filter_sender")
+		.addEventListener("click", function () {
+			filterSender(document.getElementById("info_sender").innerText);
+		});
+
 	/* ----------------------------------------------------
 	 * Button Send onClick
 	 */
@@ -120,17 +126,34 @@ function subdomainLine(subdomain) {
 	// Create a button for copying to clipboard
 	const button = document.createElement("button");
 	button.id = "info_copy_subdomain";
+	button.title = browser.i18n.getMessage("copy_to_clipboard");
 	button.addEventListener("click", function (event) {
 		toClipboard(subdomain, button);
 	});
 
 	const img = document.createElement("img");
 	img.src = "images/copy.svg";
-	img.alt = "Copy to clipboard";
+	img.alt = browser.i18n.getMessage("copy_to_clipboard");
 	img.width = 20;
 	img.height = 20;
 
 	button.appendChild(img);
+
+	// Create a button for filter
+	const button_filter = document.createElement("button");
+	button_filter.id = "info_filter_subdomain";
+	button_filter.title = browser.i18n.getMessage("filter");
+	button_filter.addEventListener("click", function (event) {
+		filterDomain(subdomain);
+	});
+
+	const img_filter = document.createElement("img");
+	img_filter.src = "images/filter.svg";
+	img_filter.alt = browser.i18n.getMessage("filter");
+	img_filter.width = 20;
+	img_filter.height = 20;
+
+	button_filter.appendChild(img_filter);
 
 	// Create text Subdomain
 	const span = document.createElement("span");
@@ -166,6 +189,7 @@ function subdomainLine(subdomain) {
 
 	// Join to one row
 	line.appendChild(button);
+	line.appendChild(button_filter);
 	line.appendChild(span);
 	line.appendChild(bracketStart);
 	line.appendChild(aHttp);
@@ -181,4 +205,56 @@ function subdomainLine(subdomain) {
 	line.appendChild(document.createElement("br"));
 
 	return line;
+}
+
+function filterSender(sender) {
+	filterMessages({
+		author: sender,
+		// subject: "Zľava",
+		// flagged: true
+	});
+}
+
+function filterDomain(domain) {
+	filterMessages({
+		fullText: "@"+domain,
+	});
+}
+
+async function filterMessages(queryParams) {
+	let tabs = await browser.tabs.query({ active: true, currentWindow: true });
+	const tab = tabs[0];
+	// console.log('tab', tab);
+	if (tab.type == "mail") {
+		const tab_info = await browser.mailTabs.get(tab.id);
+		const folderID = tab_info.displayedFolder.id;
+		queryParams.folderId = folderID;
+	}
+	// console.log(queryParams);
+	switchForm("messagelist");
+	document.getElementById("messagelist_messages").innerHTML =
+		'<tr><td colspan="4">' + browser.i18n.getMessage("loading") + "</td></tr>";
+	const msgs = await browser.messages.query(queryParams);
+	// console.log(msgs);
+	if (msgs == null) {
+		document.getElementById("messagelist_messages").innerHTML =
+			'<tr><td colspan="4">' +
+			broswer.i18n.getMessage("search_failed") +
+			"</td></tr>";
+		return false;
+	}
+	document.getElementById("messagelist_messages").innerHTML = "";
+	for (var i = 0; i < msgs.messages.length; i++) {
+		var message = msgs.messages[i];
+		// console.log('message', message);
+		let id = message.id;
+		let subject = escapeHTML(message.subject);
+		let sender = escapeHTML(message.author);
+		let date = formatDate(message.date);
+		tableAdd("messagelist_table", [id, subject, sender, date]);
+	}
+	if (msgs.messages.length == 0) {
+		document.getElementById("messagelist_messages").innerHTML =
+			'<tr><td colspan="4">' + browser.i18n.getMessage("search_empty") + "</td></tr>";
+	}
 }

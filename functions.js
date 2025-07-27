@@ -76,7 +76,11 @@ function tableAdd(table_id, data) {
 	const tr = document.createElement("tr");
 	for (let i = 0; i < data.length; i++) {
 		const td = document.createElement("td");
-		td.innerHTML = data[i];
+		if (typeof data[i] == "array") {
+			td.innerHTML = data[i].join(", ");
+		} else {
+			td.innerHTML = data[i];
+		}
 		tr.appendChild(td);
 	}
 	tbody.appendChild(tr);
@@ -107,4 +111,15 @@ function toClipboard(text, element) {
 			}
 		})
 		.catch((err) => console.error("Chyba pri kopírovaní:", err));
+}
+
+function formatDate(date) {
+	const pad = (n) => String(n).padStart(2, "0");
+	const year = date.getFullYear();
+	const month = pad(date.getMonth() + 1); // months are 0-11
+	const day = pad(date.getDate());
+	const hours = pad(date.getHours());
+	const minutes = pad(date.getMinutes());
+	const seconds = pad(date.getSeconds());
+	return `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
 }

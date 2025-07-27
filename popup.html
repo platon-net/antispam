@@ -19,8 +19,10 @@
 	<div id="form_info" class="form">
 		<div class="attribute">
 			<div class="name">__MSG_sender__</div>
-			<div class="value"><button id="info_copy_sender"><img src="images/copy.svg" alt="Copy to clipboard" width="20"
-						height="20"></button>
+			<div class="value"><button id="info_copy_sender" title="__MSG_copy_to_clipboard__"><img
+						src="images/copy.svg" alt="__MSG_copy_to_clipboard__" width="20" height="20"></button>
+				<button id="info_filter_sender" title="__MSG_filter__"><img src="images/filter.svg"
+						alt="__MSG_filter__" width="20" height="20"></button>
 				<span id="info_sender"></span>
 			</div>
 		</div>
@@ -64,6 +66,24 @@
 		</div>
 		<button id="antispam_button_send">__MSG_send__</button>
 		<br>
+	</div>
+
+	<div id="messagelist" class="form hide">
+		<table id="messagelist_table">
+			<thead>
+				<tr>
+					<th>__MSG_ID__</th>
+					<th>__MSG_subject__</th>
+					<th>__MSG_sender__</th>
+					<th>__MSG_date__</th>
+				</tr>
+			</thead>
+			<tbody id="messagelist_messages">
+				<tr>
+					<td colspan="4">__MSG_loading__</td>
+				</tr>
+			</tbody>
+		</table>
 	</div>
 
 </body>
