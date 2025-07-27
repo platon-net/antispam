@@ -1,3 +1,11 @@
+function extractEmail(email) {
+	// Regular expression to find a valid email inside < > or standalone
+	const match = email.match(
+		/<?([a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,})>?/
+	);
+	return match ? match[1] : null;
+}
+
 function getDomainFromEmail(email) {
 	if (Array.isArray(email)) {
 		let domains = [];
@@ -9,6 +17,16 @@ function getDomainFromEmail(email) {
 	if (email == null) return null;
 	const domain = email.split("@")[1].replace(/[<>]/g, "");
 	return domain;
+}
+
+function extractSubdomains(hostname) {
+	const parts = hostname.split(".");
+	const result = [];
+	for (let i = 0; i <= parts.length - 2; i++) {
+		const subdomain = parts.slice(i).join(".");
+		result.push(subdomain);
+	}
+	return result;
 }
 
 function extractIPAddresses(text) {
@@ -66,11 +84,27 @@ function tableAdd(table_id, data) {
 
 function requestSitePermission(url, callback) {
 	const origin = url.replace(/\/?\*?$/, "/*");
-	browser.permissions.request({
-		origins: [origin],
-	}).then(granted => {
-		if (callback != null) {
-			callback(granted);
-		}
-	});
+	browser.permissions
+		.request({
+			origins: [origin],
+		})
+		.then((granted) => {
+			if (callback != null) {
+				callback(granted);
+			}
+		});
+}
+
+function toClipboard(text, element) {
+	navigator.clipboard
+		.writeText(text)
+		.then(() => {
+			if (element != null) {
+				element.classList.add("copied");
+				setTimeout(() => {
+					element.classList.remove("copied");
+				}, 1000);
+			}
+		})
+		.catch((err) => console.error("Chyba pri kopírovaní:", err));
 }

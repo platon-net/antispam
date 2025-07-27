@@ -11,6 +11,12 @@
 	"header": {
 		"message": "Send to Antispam database"
 	},
+	"form_info_show": {
+		"message": "Information"
+	},
+	"form_summary_show": {
+		"message": "Summary form"
+	},
 	"recipients": {
 		"message": "Recipients"
 	},

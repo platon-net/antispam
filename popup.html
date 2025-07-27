@@ -1,44 +1,71 @@
 <!DOCTYPE html>
 <html>
+
 <head>
-	<meta charset="utf-8"/>
+	<meta charset="utf-8" />
 	<title>popup.html</title>
 	<link rel="stylesheet" href="css/popup.css">
 	<script type="text/javascript" src="i18n.js" defer="true"></script>
 	<script type="text/javascript" src="functions.js" defer="true"></script>
 	<script type="text/javascript" src="popup.js" defer="true"></script>
 </head>
+
 <body id="antispam">
-	<h1><img src="images/icon.svg" width="20" height="20" alt="Antispam icon" id="antispam_icon"> __MSG_header__</h1>
-	<div class="attribute">
-		<div class="name">__MSG_recipients__</div>
-		<div class="value"><input type="text" id="antispam_recipients" value=""></div>
+	<div id="buttons">
+		<button id="button_form_info_show">__MSG_form_info_show__</button>
+		<button id="button_form_summary_show">__MSG_form_summary_show__</button>
 	</div>
-	<div class="attribute">
-		<div class="name">__MSG_sender__</div>
-		<div class="value"><input type="text" id="antispam_sender" value=""></div>
+
+	<div id="form_info" class="form">
+		<div class="attribute">
+			<div class="name">__MSG_sender__</div>
+			<div class="value"><button id="info_copy_sender"><img src="images/copy.svg" alt="Copy to clipboard" width="20"
+						height="20"></button>
+				<span id="info_sender"></span>
+			</div>
+		</div>
+		<div class="attribute">
+			<div class="name">__MSG_sender_domain__</div>
+			<div class="value" id="info_sender_subdomains"><span id="info_sender_domain"></span></div>
+		</div>
+
 	</div>
-	<div class="attribute">
-		<div class="name">__MSG_sender_domain__</div>
-		<div class="value"><input type="text" id="antispam_sender_domain" value=""></div>
+
+	<div id="form_summary" class="form hide">
+		<h1><img src="images/icon.svg" width="20" height="20" alt="Antispam icon" id="antispam_icon"> __MSG_header__
+		</h1>
+		<div class="attribute">
+			<div class="name">__MSG_recipients__</div>
+			<div class="value"><input type="text" id="antispam_recipients" value=""></div>
+		</div>
+		<div class="attribute">
+			<div class="name">__MSG_sender__</div>
+			<div class="value"><input type="text" id="antispam_sender" value=""></div>
+		</div>
+		<div class="attribute">
+			<div class="name">__MSG_sender_domain__</div>
+			<div class="value"><input type="text" id="antispam_sender_domain" value=""></div>
+		</div>
+		<div class="attribute">
+			<div class="name">__MSG_replyto__</div>
+			<div class="value"><input type="text" id="antispam_replyto" value=""></div>
+		</div>
+		<div class="attribute">
+			<div class="name">__MSG_replyto_domain__</div>
+			<div class="value"><input type="text" id="antispam_replyto_domain" value=""></div>
+		</div>
+		<div class="attribute">
+			<div class="name">__MSG_subject__</div>
+			<div class="value"><input type="text" id="antispam_subject" value=""></div>
+		</div>
+		<div class="attribute">
+			<div class="name">__MSG_ipaddresses__</div>
+			<div class="value"><input type="text" id="antispam_ipaddresses" value=""></div>
+		</div>
+		<button id="antispam_button_send">__MSG_send__</button>
+		<br>
 	</div>
-	<div class="attribute">
-		<div class="name">__MSG_replyto__</div>
-		<div class="value"><input type="text" id="antispam_replyto" value=""></div>
-	</div>
-	<div class="attribute">
-		<div class="name">__MSG_replyto_domain__</div>
-		<div class="value"><input type="text" id="antispam_replyto_domain" value=""></div>
-	</div>
-	<div class="attribute">
-		<div class="name">__MSG_subject__</div>
-		<div class="value"><input type="text" id="antispam_subject" value=""></div>
-	</div>
-	<div class="attribute">
-		<div class="name">__MSG_ipaddresses__</div>
-		<div class="value"><input type="text" id="antispam_ipaddresses" value=""></div>
-	</div>
-	<button id="antispam_button_send">__MSG_send__</button>
-	<br>
+
 </body>
+
 </html>

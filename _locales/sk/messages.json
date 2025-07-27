@@ -11,6 +11,12 @@
 	"header": {
 		"message": "Odoslať do Antispam databázy"
 	},
+	"form_info_show": {
+		"message": "Informácie"
+	},
+	"form_summary_show": {
+		"message": "Sumarizačný formulár"
+	},
 	"recipients": {
 		"message": "Príjemcovia"
 	},
