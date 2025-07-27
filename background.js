@@ -79,7 +79,7 @@ function webserviceResponseProcess(response) {
 function antispamAddMaildata(maildata, callback) {
 	webservice(
 		"antispam",
-		{ action: "add", maildata: maildata },
+		{ action: "addMaildata", maildata: maildata },
 		function (response) {
 			var result = webserviceResponseProcess(response);
 			if (callback != null) callback(result);

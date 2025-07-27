@@ -101,7 +101,6 @@ document.addEventListener("DOMContentLoaded", function () {
 				sender: document.getElementById("antispam_sender").value,
 				subject: document.getElementById("antispam_subject").value,
 			};
-			document.body.textContent = "Sending...";
 			antispamAddMaildata(maildata);
 		});
 
@@ -165,7 +164,6 @@ function antispamEmailrule(type, pattern) {
 
 function antispamEmailruleQuestion(type, pattern) {
 	question("Create rule?", function (result) {
-		console.log("vyhodnocujem");
 		if (result) {
 			antispamEmailrule(type, pattern);
 		} else {
