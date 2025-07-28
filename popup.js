@@ -163,7 +163,7 @@ function antispamEmailrule(type, pattern) {
 }
 
 function antispamEmailruleQuestion(type, pattern) {
-	question("Create rule?", function (result) {
+	question(browser.i18n.getMessage("create_rule")+"?", function (result) {
 		if (result) {
 			antispamEmailrule(type, pattern);
 		} else {
