@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Igor Mino (c) 2025-08-05 22:35:01 -->
+<svg width="1000" height="1000"
+	xmlns="http://www.w3.org/2000/svg">
+	<defs>
+		<linearGradient id="redGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+			<stop offset="30%" stop-color="red" />
+			<stop offset="100%" stop-color="yellow">
+				<animate attributeName="stop-color" values="yellow;red;yellow" dur="4s" repeatCount="indefinite" />
+			</stop>
+		</linearGradient>
+	</defs>
+
+	<!-- <rect width="1000" height="1000" x="0" y="0" fill="#ccc" /> -->
+	<polygon points="300,50 700,50 950,300 950,700 700,950 300,950 50,700 50,300" fill="url(#redGradient)" stroke="black" stroke-width="30" />
+
+	<path d="M400,420 a 120 200 0 1 1 200 0 L530,600 q -30,50,-60,0 Z" stroke="black" stroke-width="4" fill="black"/>
+	<circle cx="500" cy="750" r="75"/>
+</svg>

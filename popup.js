@@ -1,3 +1,4 @@
+/*
 browser.tabs
 	.query({
 		active: true,
@@ -5,6 +6,11 @@ browser.tabs
 	})
 	.then((tabs) => {
 		let tabId = tabs[0].id;
+*/
+const url = new URL(window.location.href);
+const tabId = parseInt(url.searchParams.get("tab_id"), 10);
+console.log("Tab ID:", tabId);
+
 		// console.log(messenger);
 		messenger.messageDisplay
 			.getDisplayedMessages(tabId)
@@ -12,7 +18,8 @@ browser.tabs
 				var message = message_list.messages[0];
 				// console.log(message);
 				let sender_email = extractEmail(message.author);
-				let sender_domain = getDomainFromEmail(message.author);
+				let sender_domain = getDomainFromEmail(sender_email);
+				document.title = sender_email+": "+message.subject;
 				// Form Info
 				let subdomains = extractSubdomains(sender_domain);
 				document.getElementById("info_sender").innerText = sender_email;
@@ -41,7 +48,7 @@ browser.tabs
 						extractIPAddresses(message_part.headers.received);
 				});
 			});
-	});
+//	});
 
 document.addEventListener("DOMContentLoaded", function () {
 	/* ----------------------------------------------------
@@ -216,7 +223,7 @@ function subdomainLine(subdomain) {
 	});
 
 	const img_rule = document.createElement("img");
-	img_rule.src = "images/stop-urgent.svg";
+	img_rule.src = "images/stop-urgent2.svg";
 	img_rule.alt = browser.i18n.getMessage("create_rule");
 	img_rule.width = 20;
 	img_rule.height = 20;

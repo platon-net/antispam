@@ -152,3 +152,12 @@ browser.runtime.onMessage.addListener(function (request, sender, sendResponse) {
 	}
 	return true;
 });
+
+browser.messageDisplayAction.onClicked.addListener(async (tab) => {
+	await browser.windows.create({
+		url: "popup.html?tab_id=" + tab.id,
+		type: "popup",
+		width: 800,
+		height: 600
+	});
+});
