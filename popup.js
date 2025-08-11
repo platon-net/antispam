@@ -38,11 +38,22 @@ console.log("Tab ID:", tabId);
 				messenger.messages.getFull(message.id).then((message_part) => {
 					// console.log(message_part);
 					let replyto = message_part.headers["reply-to"];
-					if (replyto != null) {
+					if (replyto != null
+						&& Array.isArray(replyto)
+						&& replyto.length > 0)
+					{
+						console.log("replyto", replyto);
+						for (let i = 0; i < replyto.length; i++) {
+							document
+								.getElementById("info_sender_replytos")
+								.appendChild(emailLine(replyto[i]));
+						}
+						/*
 						document.getElementById("antispam_replyto").value =
 							replyto.join(", ");
 						document.getElementById("antispam_replyto_domain").value =
 							getDomainFromEmail(replyto);
+						*/
 					}
 					document.getElementById("antispam_ipaddresses").value =
 						extractIPAddresses(message_part.headers.received);
@@ -200,7 +211,6 @@ function subdomainLine(subdomain) {
 
 	// Create a button for filter
 	const button_filter = document.createElement("button");
-	button_filter.id = "info_filter_subdomain";
 	button_filter.title = browser.i18n.getMessage("filter");
 	button_filter.addEventListener("click", function (event) {
 		filterDomain(subdomain);
@@ -216,7 +226,6 @@ function subdomainLine(subdomain) {
 
 	// Create a button for create rule
 	const button_rule = document.createElement("button");
-	button_rule.id = "info_create_rule_subdomain";
 	button_rule.title = browser.i18n.getMessage("create_rule");
 	button_rule.addEventListener("click", function (event) {
 		antispamEmailruleQuestion("sender_domain", subdomain);
@@ -285,6 +294,73 @@ function subdomainLine(subdomain) {
 	return line;
 }
 
+function emailLine(email) {
+	const line = document.createElement("div");
+
+	// Create a button for copying to clipboard
+	const button = document.createElement("button");
+	button.id = "info_copy_email";
+	button.title = browser.i18n.getMessage("copy_to_clipboard");
+	button.addEventListener("click", function (event) {
+		toClipboard(email, button);
+	});
+
+	const img = document.createElement("img");
+	img.src = "images/copy.svg";
+	img.alt = browser.i18n.getMessage("copy_to_clipboard");
+	img.width = 20;
+	img.height = 20;
+
+	button.appendChild(img);
+
+	// Create a button for filter
+	const button_filter = document.createElement("button");
+	button_filter.title = browser.i18n.getMessage("filter");
+	button_filter.addEventListener("click", function (event) {
+		filterFulltext(email);
+	});
+
+	const img_filter = document.createElement("img");
+	img_filter.src = "images/filter.svg";
+	img_filter.alt = browser.i18n.getMessage("filter");
+	img_filter.width = 20;
+	img_filter.height = 20;
+
+	button_filter.appendChild(img_filter);
+
+	// Create a button for create rule
+	const button_rule = document.createElement("button");
+	button_rule.title = browser.i18n.getMessage("create_rule");
+	button_rule.addEventListener("click", function (event) {
+		antispamEmailruleQuestion("sender_email", email);
+	});
+
+	const img_rule = document.createElement("img");
+	img_rule.src = "images/stop-urgent2.svg";
+	img_rule.alt = browser.i18n.getMessage("create_rule");
+	img_rule.width = 20;
+	img_rule.height = 20;
+
+	button_rule.appendChild(img_rule);
+
+	// Create text email
+	const span = document.createElement("span");
+	span.textContent = " " + email + " ";
+
+	// Join to one row
+	line.appendChild(button);
+	line.appendChild(document.createTextNode(" "));
+	line.appendChild(button_filter);
+	line.appendChild(document.createTextNode(" "));
+	line.appendChild(button_rule);
+	line.appendChild(span);
+
+	// Break row
+	line.appendChild(document.createElement("br"));
+
+	return line;
+}
+
 function filterSender(sender) {
 	filterMessages({
 		author: sender,
@@ -294,13 +370,17 @@ function filterSender(sender) {
 }
 
 function filterDomain(domain) {
+	filterFulltext("@" + domain);
+}
+
+function filterFulltext(text) {
 	filterMessages({
-		fullText: "@" + domain,
+		fullText: text,
 	});
 }
 
 async function filterMessages(queryParams) {
-	let tabs = await browser.tabs.query({ active: true, currentWindow: true });
+	let tabs = await browser.tabs.query({ active: true, currentWindow: false });
 	const tab = tabs[0];
 	// console.log('tab', tab);
 	if (tab.type == "mail") {
