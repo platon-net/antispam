@@ -20,6 +20,9 @@
 	"recipients": {
 		"message": "Príjemcovia"
 	},
+	"recipients_domain": {
+		"message": "Domény príjemcu"
+	},
 	"sender": {
 		"message": "Odosielateľ"
 	},

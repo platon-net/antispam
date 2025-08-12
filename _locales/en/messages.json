@@ -20,6 +20,9 @@
 	"recipients": {
 		"message": "Recipients"
 	},
+	"recipients_domain": {
+		"message": "Recipients domain"
+	},
 	"sender": {
 		"message": "Sender"
 	},

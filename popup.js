@@ -20,6 +20,22 @@ console.log("Tab ID:", tabId);
 				let sender_email = extractEmail(message.author);
 				let sender_domain = getDomainFromEmail(sender_email);
 				document.title = sender_email+": "+message.subject;
+				// To Info
+				if (Array.isArray(message.recipients)) {
+					for (let i = 0; i < message.recipients.length; i++) {
+						let recipient_email = extractEmail(message.recipients[i]);
+						document
+							.getElementById("info_recipients")
+							.appendChild(emailLine(recipient_email));
+						let recipient_domain = getDomainFromEmail(recipient_email);
+						let recipient_subdomains = extractSubdomains(recipient_domain);
+						for (let i = 0; i < recipient_subdomains.length; i++) {
+							document
+								.getElementById("info_recipients_subdomains")
+								.appendChild(subdomainLine(recipient_subdomains[i]));
+						}
+					}
+				}
 				// Form Info
 				let subdomains = extractSubdomains(sender_domain);
 				document.getElementById("info_sender").innerText = sender_email;
@@ -42,20 +58,21 @@ console.log("Tab ID:", tabId);
 						&& Array.isArray(replyto)
 						&& replyto.length > 0)
 					{
-						console.log("replyto", replyto);
+						// console.log("replyto", replyto);
 						for (let i = 0; i < replyto.length; i++) {
 							document
 								.getElementById("info_sender_replytos")
 								.appendChild(emailLine(replyto[i]));
+							let replyto_domain = getDomainFromEmail(replyto[i]);
+							let replyto_subdomains = extractSubdomains(replyto_domain);
+							for (let i = 0; i < replyto_subdomains.length; i++) {
+								document
+									.getElementById("info_replyto_subdomains")
+									.appendChild(subdomainLine(replyto_subdomains[i]));
+							}
 						}
-						/*
-						document.getElementById("antispam_replyto").value =
-							replyto.join(", ");
-						document.getElementById("antispam_replyto_domain").value =
-							getDomainFromEmail(replyto);
-						*/
 					}
-					document.getElementById("antispam_ipaddresses").value =
+					document.getElementById("antispam_ipaddresses").textContent =
 						extractIPAddresses(message_part.headers.received);
 				});
 			});
