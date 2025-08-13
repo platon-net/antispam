@@ -17,6 +17,9 @@
 	"form_summary_show": {
 		"message": "Sumarizačný formulár"
 	},
+	"Recipient": {
+		"message": "Príjemca"
+	},
 	"recipients": {
 		"message": "Príjemcovia"
 	},
@@ -29,6 +32,9 @@
 	"sender_domain": {
 		"message": "Doména odosielateľa"
 	},
+	"Reply_To": {
+		"message": "Odpovedať na"
+	},
 	"replyto": {
 		"message": "Adresa pre odpoveď"
 	},
@@ -37,6 +43,9 @@
 	},
 	"subject": {
 		"message": "Predmet"
+	},
+	"Other_info": {
+		"message": "Ostatné informácie"
 	},
 	"ipaddresses": {
 		"message": "IP adresy"

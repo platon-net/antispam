@@ -60,10 +60,11 @@ console.log("Tab ID:", tabId);
 					{
 						// console.log("replyto", replyto);
 						for (let i = 0; i < replyto.length; i++) {
+							let replyto_email = extractEmail(replyto[i]);
 							document
 								.getElementById("info_sender_replytos")
-								.appendChild(emailLine(replyto[i]));
-							let replyto_domain = getDomainFromEmail(replyto[i]);
+								.appendChild(emailLine(replyto_email));
+							let replyto_domain = getDomainFromEmail(replyto_email);
 							let replyto_subdomains = extractSubdomains(replyto_domain);
 							for (let i = 0; i < replyto_subdomains.length; i++) {
 								document

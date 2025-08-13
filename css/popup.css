@@ -58,6 +58,13 @@ table tbody tr td {
 	margin-bottom: 5px;
 	font-size: 20px;
 }
+#antispam h1.light,
+#antispam h2.light,
+#antispam h3.light {
+	background-color: var(--color-bg1);
+	color: var(--color-text1);
+	padding: 5px;
+}
 #antispam .attribute {
 	display: flex;
 	flex-direction: row;
