@@ -1,4 +1,4 @@
-console.log("experiment.js bol nacitany");
+// console.log("experiment.js bol nacitany");
 
 const { Gloda } = ChromeUtils.importESModule(
 	"resource:///modules/gloda/GlodaPublic.sys.mjs"
@@ -64,21 +64,24 @@ GlodaIndexer.registerIndexer(MyDomainProvider);
 
 this.domainProvider = class extends ExtensionAPI {
 	getAPI(context) {
-		console.log("Domain provider getAPI");
+		// console.log("Domain provider getAPI");
 		return {
 			domainProvider: {
 				async register() {
-					console.log("Domain provider registered");
+					// console.log("Domain provider registered");
 				},
 				async searchDomain(domain) {
 					let db = await Sqlite.openConnection({ path });
 
-					console.log("Search domain:", domain);
+					// console.log("Search domain:", domain);
 					let rows = await db.execute(
-						"SELECT * FROM messagesText_content WHERE c3author LIKE :domain OR c4recipients LIKE :domain",
+						"SELECT * FROM messagesText_content AS content" +
+							" LEFT JOIN messages AS msgs ON msgs.id = content.docid" +
+							" WHERE content.c3author LIKE :domain" +
+							" OR content.c4recipients LIKE :domain",
 						{ domain: `%@${domain}%` }
 					);
-console.log("vysledok:", rows);
+					// console.log("vysledok:", rows);
 					let ret = [];
 					for (let row of rows) {
 						ret.push({
@@ -87,6 +90,7 @@ console.log("vysledok:", rows);
 							subject: row.getResultByName("c1subject"), //c1subject,
 							sender: row.getResultByName("c3author"), //c3author,
 							recipients: row.getResultByName("c4recipients"), //c4recipients,
+							date: row.getResultByName("date"),
 						});
 					}
 

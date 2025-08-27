@@ -16,7 +16,7 @@ console.log("Tab ID:", tabId);
 			.getDisplayedMessages(tabId)
 			.then((message_list) => {
 				var message = message_list.messages[0];
-				console.log(message);
+				// console.log(message);
 				let sender_email = extractEmail(message.author);
 				let sender_domain = getDomainFromEmail(sender_email);
 				document.title = sender_email+": "+message.subject;
@@ -443,7 +443,7 @@ async function domainProviderSearchDomain(domain) {
 	document.getElementById("messagelist_messages").innerHTML =
 		'<tr><td colspan="4">' + browser.i18n.getMessage("loading") + "</td></tr>";
 	let rows = await browser.domainProvider.searchDomain(domain);
-	console.log(rows);
+	// console.log(rows);
 	if (rows == null) {
 		document.getElementById("messagelist_messages").innerHTML =
 			'<tr><td colspan="4">' +
@@ -458,7 +458,7 @@ async function domainProviderSearchDomain(domain) {
 		let id = message.docid;
 		let subject = escapeHTML(message.subject);
 		let sender = escapeHTML(message.sender);
-		let date = "TODO"; //formatDate(message.date);
+		let date = formatDate(new Date(message.date / 1000));
 		tableAdd("messagelist_table", [id, subject, sender, date]);
 	}
 	if (rows.length == 0) {
