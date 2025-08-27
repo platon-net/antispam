@@ -20,6 +20,7 @@ function getDomainFromEmail(email) {
 }
 
 function extractSubdomains(hostname) {
+	if (hostname == null) return [];
 	const parts = hostname.split(".");
 	const result = [];
 	for (let i = 0; i <= parts.length - 2; i++) {

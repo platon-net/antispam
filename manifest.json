@@ -26,6 +26,16 @@
 		"scripts": ["functions.js", "background.js"],
 		"type": "module"
 	},
+	"experiment_apis": {
+		"domainProvider": {
+			"schema": "schema.json",
+			"parent": {
+				"scopes": ["addon_parent"],
+				"paths": [["domainProvider"]],
+				"script": "experiment.js"
+			}
+		}
+	},
 	"message_display_action": {
 		"default_title": "__MSG_sendToDB__",
 		"default_icon": "images/icon.svg?4"

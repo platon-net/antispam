@@ -16,7 +16,7 @@ console.log("Tab ID:", tabId);
 			.getDisplayedMessages(tabId)
 			.then((message_list) => {
 				var message = message_list.messages[0];
-				// console.log(message);
+				console.log(message);
 				let sender_email = extractEmail(message.author);
 				let sender_domain = getDomainFromEmail(sender_email);
 				document.title = sender_email+": "+message.subject;
@@ -388,7 +388,8 @@ function filterSender(sender) {
 }
 
 function filterDomain(domain) {
-	filterFulltext("@" + domain);
+	//filterFulltext("@" + domain);
+	domainProviderSearchDomain(domain);
 }
 
 function filterFulltext(text) {
@@ -430,6 +431,37 @@ async function filterMessages(queryParams) {
 		tableAdd("messagelist_table", [id, subject, sender, date]);
 	}
 	if (msgs.messages.length == 0) {
+		document.getElementById("messagelist_messages").innerHTML =
+			'<tr><td colspan="4">' +
+			browser.i18n.getMessage("search_empty") +
+			"</td></tr>";
+	}
+}
+
+async function domainProviderSearchDomain(domain) {
+	switchForm("messagelist");
+	document.getElementById("messagelist_messages").innerHTML =
+		'<tr><td colspan="4">' + browser.i18n.getMessage("loading") + "</td></tr>";
+	let rows = await browser.domainProvider.searchDomain(domain);
+	console.log(rows);
+	if (rows == null) {
+		document.getElementById("messagelist_messages").innerHTML =
+			'<tr><td colspan="4">' +
+			broswer.i18n.getMessage("search_failed") +
+			"</td></tr>";
+		return false;
+	}
+	document.getElementById("messagelist_messages").innerHTML = "";
+	for (var i = 0; i < rows.length; i++) {
+		var message = rows[i];
+		// console.log('message', message);
+		let id = message.docid;
+		let subject = escapeHTML(message.subject);
+		let sender = escapeHTML(message.sender);
+		let date = "TODO"; //formatDate(message.date);
+		tableAdd("messagelist_table", [id, subject, sender, date]);
+	}
+	if (rows.length == 0) {
 		document.getElementById("messagelist_messages").innerHTML =
 			'<tr><td colspan="4">' +
 			browser.i18n.getMessage("search_empty") +

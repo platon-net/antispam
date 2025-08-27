@@ -1,3 +1,8 @@
+#antispam {
+	display: flex;
+	flex-direction: column;
+	gap: 10px;
+}
 .antispam_icon {
 	width: 20px;
 	height: 20px;

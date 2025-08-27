@@ -1,0 +1,35 @@
+[
+	{
+		"namespace": "domainProvider",
+		"functions": [
+			{
+				"name": "register",
+				"type": "function",
+				"async": true,
+				"parameters": []
+			},
+			{
+				"name": "indexingFolder",
+				"type": "function",
+				"async": true,
+				"parameters": [
+					{
+						"name": "folderID",
+						"type": "string"
+					}
+				]
+			},
+			{
+				"name": "searchDomain",
+				"type": "function",
+				"async": true,
+				"parameters": [
+					{
+						"name": "domain",
+						"type": "string"
+					}
+				]
+			}
+		]
+	}
+]

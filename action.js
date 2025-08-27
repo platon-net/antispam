@@ -6,7 +6,7 @@ document.addEventListener("DOMContentLoaded", function () {
 	 */
 
 	/* ----------------------------------------------------
-	 * Button Send onClick
+	 * Button Run Analyze onClick
 	 */
 	document
 		.getElementById("antispam_button_run_analyze")
@@ -26,5 +26,15 @@ document.addEventListener("DOMContentLoaded", function () {
 			await messenger.tabs.create({
 				url: url.href,
 			});
+		});
+
+	/* ----------------------------------------------------
+	 * Button Search Domain onClick
+	 */
+	document
+		.getElementById("antispam_button_search_domain")
+		.addEventListener("click", async function () {
+			let count = await browser.domainProvider.searchDomain("exitapi.com");
+			console.log(count);
 		});
 });
