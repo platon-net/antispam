@@ -122,7 +122,8 @@ document.addEventListener("DOMContentLoaded", function () {
 		.addEventListener("click", function () {
 			antispamEmailruleQuestion(
 				"sender_email",
-				document.getElementById("info_sender").innerText
+				document.getElementById("info_sender").innerText,
+				document.getElementById("info_create_rule_sender")
 			);
 		});
 
@@ -164,7 +165,7 @@ function switchForm(form_id) {
 	document.getElementById(form_id).classList.remove("hide");
 }
 
-function webserviceResponseHandler(response) {
+function webserviceResponseHandler(response, output_object) {
 	// console.log(response);
 	var result_html = "N/A";
 	if (response.success == true) {
@@ -175,7 +176,11 @@ function webserviceResponseHandler(response) {
 	} else {
 		result_html = response.message;
 	}
-	document.getElementById("webservice").innerHTML = result_html;
+	if (output_object == null) {
+		document.getElementById("webservice").innerHTML = result_html;
+	} else {
+		output_object.innerHTML = result_html;
+	}
 }
 
 function antispamAddMaildata(maildata) {
@@ -188,24 +193,59 @@ function antispamAddMaildata(maildata) {
 	);
 }
 
-function antispamEmailrule(type, pattern) {
-	switchForm("webservice");
-	document.getElementById("webservice").innerText =
+function antispamEmailrule(type, pattern, output_object) {
+	if (output_object == null) {
+		switchForm("webservice");
+		document.getElementById("webservice").innerText =
+			browser.i18n.getMessage("loading");
+	} else {
+		output_object.innerText =
 		browser.i18n.getMessage("loading");
+	}
 	browser.runtime.sendMessage(
 		{ name: "antispamEmailrule", type: type, pattern: pattern },
-		webserviceResponseHandler
+		function (response){
+			webserviceResponseHandler(response, output_object);
+		}
 	);
 }
 
-function antispamEmailruleQuestion(type, pattern) {
-	question(browser.i18n.getMessage("create_rule")+"?", function (result) {
-		if (result) {
-			antispamEmailrule(type, pattern);
-		} else {
-			switchForm("form_info");
-		}
+function antispamEmailruleQuestion(type, pattern, button_obj) {
+	if (button_obj == null) {
+		question(browser.i18n.getMessage("create_rule")+"?", function (result) {
+			if (result) {
+				antispamEmailrule(type, pattern);
+			} else {
+				switchForm("form_info");
+			}
+		});
+		return;
+	}
+	const inline = document.createElement("div");
+
+	const question = document.createElement("span");
+	question.innerText = browser.i18n.getMessage("create_rule")+"?";
+
+	const button_yes = document.createElement("button");
+	button_yes.innerText = browser.i18n.getMessage("yes");
+
+	const button_no = document.createElement("button");
+	button_no.innerText = browser.i18n.getMessage("no");
+
+	button_yes.addEventListener("click", function (event) {
+		antispamEmailrule(type, pattern, inline);
 	});
+
+	button_no.addEventListener("click", function (event) {
+		inline.parentNode.removeChild(inline);
+	});
+
+	inline.appendChild(question);
+	inline.appendChild(document.createTextNode(" "));
+	inline.appendChild(button_yes);
+	inline.appendChild(document.createTextNode(" "));
+	inline.appendChild(button_no);
+	button_obj.parentNode.appendChild(inline);
 }
 
 function subdomainLine(subdomain) {
@@ -246,7 +286,7 @@ function subdomainLine(subdomain) {
 	const button_rule = document.createElement("button");
 	button_rule.title = browser.i18n.getMessage("create_rule");
 	button_rule.addEventListener("click", function (event) {
-		antispamEmailruleQuestion("sender_domain", subdomain);
+		antispamEmailruleQuestion("sender_domain", subdomain, button_rule);
 	});
 
 	const img_rule = document.createElement("img");
@@ -350,7 +390,7 @@ function emailLine(email) {
 	const button_rule = document.createElement("button");
 	button_rule.title = browser.i18n.getMessage("create_rule");
 	button_rule.addEventListener("click", function (event) {
-		antispamEmailruleQuestion("sender_email", email);
+		antispamEmailruleQuestion("sender_email", email, button_rule);
 	});
 
 	const img_rule = document.createElement("img");
