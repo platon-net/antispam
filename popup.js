@@ -1,3 +1,5 @@
+import * as fnc from "./functions.js";
+
 /*
 browser.tabs
 	.query({
@@ -17,18 +19,18 @@ console.log("Tab ID:", tabId);
 			.then((message_list) => {
 				var message = message_list.messages[0];
 				// console.log(message);
-				let sender_email = extractEmail(message.author);
-				let sender_domain = getDomainFromEmail(sender_email);
+				let sender_email = fnc.extractEmail(message.author);
+				let sender_domain = fnc.getDomainFromEmail(sender_email);
 				document.title = sender_email+": "+message.subject;
 				// To Info
 				if (Array.isArray(message.recipients)) {
 					for (let i = 0; i < message.recipients.length; i++) {
-						let recipient_email = extractEmail(message.recipients[i]);
+						let recipient_email = fnc.extractEmail(message.recipients[i]);
 						document
 							.getElementById("info_recipients")
 							.appendChild(emailLine(recipient_email));
-						let recipient_domain = getDomainFromEmail(recipient_email);
-						let recipient_subdomains = extractSubdomains(recipient_domain);
+						let recipient_domain = fnc.getDomainFromEmail(recipient_email);
+						let recipient_subdomains = fnc.extractSubdomains(recipient_domain);
 						for (let i = 0; i < recipient_subdomains.length; i++) {
 							document
 								.getElementById("info_recipients_subdomains")
@@ -37,7 +39,7 @@ console.log("Tab ID:", tabId);
 					}
 				}
 				// Form Info
-				let subdomains = extractSubdomains(sender_domain);
+				let subdomains = fnc.extractSubdomains(sender_domain);
 				document.getElementById("info_sender").innerText = sender_email;
 				document.getElementById("info_sender_subdomains").innerHTML = "";
 				for (let i = 0; i < subdomains.length; i++) {
@@ -60,12 +62,12 @@ console.log("Tab ID:", tabId);
 					{
 						// console.log("replyto", replyto);
 						for (let i = 0; i < replyto.length; i++) {
-							let replyto_email = extractEmail(replyto[i]);
+							let replyto_email = fnc.extractEmail(replyto[i]);
 							document
 								.getElementById("info_sender_replytos")
 								.appendChild(emailLine(replyto_email));
-							let replyto_domain = getDomainFromEmail(replyto_email);
-							let replyto_subdomains = extractSubdomains(replyto_domain);
+							let replyto_domain = fnc.getDomainFromEmail(replyto_email);
+							let replyto_subdomains = fnc.extractSubdomains(replyto_domain);
 							for (let i = 0; i < replyto_subdomains.length; i++) {
 								document
 									.getElementById("info_replyto_subdomains")
@@ -74,7 +76,7 @@ console.log("Tab ID:", tabId);
 						}
 					}
 					document.getElementById("antispam_ipaddresses").textContent =
-						extractIPAddresses(message_part.headers.received);
+						fnc.extractIPAddresses(message_part.headers.received);
 				});
 			});
 //	});
@@ -105,7 +107,7 @@ document.addEventListener("DOMContentLoaded", function () {
 	document
 		.getElementById("info_copy_sender")
 		.addEventListener("click", function () {
-			toClipboard(
+			fnc.toClipboard(
 				document.getElementById("info_sender").innerText,
 				document.getElementById("info_copy_sender")
 			);
@@ -256,7 +258,7 @@ function subdomainLine(subdomain) {
 	button.id = "info_copy_subdomain";
 	button.title = browser.i18n.getMessage("copy_to_clipboard");
 	button.addEventListener("click", function (event) {
-		toClipboard(subdomain, button);
+		fnc.toClipboard(subdomain, button);
 	});
 
 	const img = document.createElement("img");
@@ -360,7 +362,7 @@ function emailLine(email) {
 	button.id = "info_copy_email";
 	button.title = browser.i18n.getMessage("copy_to_clipboard");
 	button.addEventListener("click", function (event) {
-		toClipboard(email, button);
+		fnc.toClipboard(email, button);
 	});
 
 	const img = document.createElement("img");
@@ -468,7 +470,7 @@ async function filterMessages(queryParams) {
 		let subject = escapeHTML(message.subject);
 		let sender = escapeHTML(message.author);
 		let date = formatDate(message.date);
-		tableAdd("messagelist_table", [id, subject, sender, date]);
+		fnc.tableAdd("messagelist_table", [id, subject, sender, date]);
 	}
 	if (msgs.messages.length == 0) {
 		document.getElementById("messagelist_messages").innerHTML =
@@ -499,7 +501,7 @@ async function domainProviderSearchDomain(domain) {
 		let subject = escapeHTML(message.subject);
 		let sender = escapeHTML(message.sender);
 		let date = formatDate(new Date(message.date / 1000));
-		tableAdd("messagelist_table", [id, subject, sender, date]);
+		fnc.tableAdd("messagelist_table", [id, subject, sender, date]);
 	}
 	if (rows.length == 0) {
 		document.getElementById("messagelist_messages").innerHTML =

@@ -1,4 +1,5 @@
 console.log("Hello from tabAnalyze.js");
+import * as fnc from "./functions.js";
 
 var folderID = null;
 
@@ -31,7 +32,7 @@ function analyzeRun(params, callback) {
 				return false;
 			}
 			document.getElementById("antispam_folder_name").innerHTML = response.folder.name;
-			tableClear('antispam_messages');
+			fnc.tableClear('antispam_messages');
 			for (var i = 0; i < response.unread.length; i++) {
 				var message = response.unread[i];
 				// console.log('message', message);
@@ -41,7 +42,7 @@ function analyzeRun(params, callback) {
 				let sender_domain = getDomainFromEmail(message.author);
 				let recipients = escapeHTML(message.recipients.join(", "));
 				let ipaddresses = extractIPAddresses(message.full.headers.received);
-				tableAdd(
+				fnc.tableAdd(
 					"antispam_messages",
 					[id, sender, sender_domain, recipients, subject, ipaddresses, '']
 				);

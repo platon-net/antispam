@@ -1,4 +1,4 @@
-function extractEmail(email) {
+export function extractEmail(email) {
 	// Regular expression to find a valid email inside < > or standalone
 	const match = email.match(
 		/<?([a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,})>?/
@@ -6,7 +6,7 @@ function extractEmail(email) {
 	return match ? match[1] : null;
 }
 
-function getDomainFromEmail(email) {
+export function getDomainFromEmail(email) {
 	if (Array.isArray(email)) {
 		let domains = [];
 		for (let i = 0; i < email.length; i++) {
@@ -19,7 +19,7 @@ function getDomainFromEmail(email) {
 	return domain;
 }
 
-function extractSubdomains(hostname) {
+export function extractSubdomains(hostname) {
 	if (hostname == null) return [];
 	const parts = hostname.split(".");
 	const result = [];
@@ -30,7 +30,7 @@ function extractSubdomains(hostname) {
 	return result;
 }
 
-function extractIPAddresses(text) {
+export function extractIPAddresses(text) {
 	let ignored_ip = ["127.0.0.1", "192.168."];
 	if (Array.isArray(text)) {
 		let ips = [];
@@ -56,7 +56,7 @@ function extractIPAddresses(text) {
 	return matches || [];
 }
 
-function escapeHTML(text) {
+export function escapeHTML(text) {
 	return text
 		.replace(/&/g, "&amp;")
 		.replace(/</g, "&lt;")
@@ -65,13 +65,13 @@ function escapeHTML(text) {
 		.replace(/'/g, "&#39;");
 }
 
-function tableClear(table_id) {
+export function tableClear(table_id) {
 	const table = document.getElementById(table_id);
 	const tbody = table.querySelector("tbody");
 	tbody.innerHTML = "";
 }
 
-function tableAdd(table_id, data) {
+export function tableAdd(table_id, data) {
 	const table = document.getElementById(table_id);
 	const tbody = table.querySelector("tbody");
 	const tr = document.createElement("tr");
@@ -87,7 +87,7 @@ function tableAdd(table_id, data) {
 	tbody.appendChild(tr);
 }
 
-function requestSitePermission(url, callback) {
+export function requestSitePermission(url, callback) {
 	const origin = url.replace(/\/?\*?$/, "/*");
 	browser.permissions
 		.request({
@@ -100,7 +100,7 @@ function requestSitePermission(url, callback) {
 		});
 }
 
-function toClipboard(text, element) {
+export function toClipboard(text, element) {
 	navigator.clipboard
 		.writeText(text)
 		.then(() => {
@@ -114,7 +114,7 @@ function toClipboard(text, element) {
 		.catch((err) => console.error("Chyba pri kopírovaní:", err));
 }
 
-function formatDate(date) {
+export function formatDate(date) {
 	const pad = (n) => String(n).padStart(2, "0");
 	const year = date.getFullYear();
 	const month = pad(date.getMonth() + 1); // months are 0-11
@@ -123,4 +123,52 @@ function formatDate(date) {
 	const minutes = pad(date.getMinutes());
 	const seconds = pad(date.getSeconds());
 	return `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
+}
+
+export async function extractMessageInfo(message) {
+	let ret = {
+		sender_subdomains: [],
+		recipients_emails: [],
+		recipients_subdomains: [],
+		replyto_emails: [],
+		replyto_subdomains: [],
+	};
+	let sender_email = extractEmail(message.author);
+	ret["sender_email"] = sender_email;
+	let sender_domain = getDomainFromEmail(sender_email);
+	ret["sender_domain"] = sender_domain;
+	// To Info
+	if (Array.isArray(message.recipients)) {
+		for (let i = 0; i < message.recipients.length; i++) {
+			let recipient_email = extractEmail(message.recipients[i]);
+			ret["recipients_emails"].push(recipient_email);
+			let recipient_domain = getDomainFromEmail(recipient_email);
+			let recipient_subdomains = extractSubdomains(recipient_domain);
+			for (let i = 0; i < recipient_subdomains.length; i++) {
+				ret["recipients_subdomains"].push(recipient_subdomains[i]);
+			}
+		}
+	}
+	// Form Info
+	let subdomains = extractSubdomains(sender_domain);
+	for (let i = 0; i < subdomains.length; i++) {
+		ret["sender_subdomains"].push(subdomains[i]);
+	}
+	let message_part = await messenger.messages.getFull(message.id);
+	// console.log(message_part);
+	let replyto = message_part.headers["reply-to"];
+	if (replyto != null && Array.isArray(replyto) && replyto.length > 0) {
+		// console.log("replyto", replyto);
+		for (let i = 0; i < replyto.length; i++) {
+			let replyto_email = extractEmail(replyto[i]);
+			ret['replyto_emails'].push(replyto_email);
+			let replyto_domain = getDomainFromEmail(replyto_email);
+			let replyto_subdomains = extractSubdomains(replyto_domain);
+			for (let i = 0; i < replyto_subdomains.length; i++) {
+				ret['replyto_subdomains'].push(replyto_subdomains[i]);
+			}
+		}
+	}
+	ret['ipaddresses'] = extractIPAddresses(message_part.headers.received);
+	return ret;
 }

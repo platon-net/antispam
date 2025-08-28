@@ -138,8 +138,8 @@ this.domainProvider = class extends ExtensionCommon.ExtensionAPI {
 						let element_image = header_row.ownerDocument.createElement("img");
 						element_image.setAttribute("class", "headertools-image");
 						element_image.setAttribute("src", icon);
-						// element_image.style.width = "20px";
-						// element_image.style.height = "20px";
+						element_image.style.width = "16px";
+						element_image.style.height = "16px";
 						element_icon.appendChild(element_image);
 					}
 					if (label) {
@@ -162,8 +162,8 @@ this.domainProvider = class extends ExtensionCommon.ExtensionAPI {
 						let element_image = header_row.ownerDocument.createElement("img");
 						element_image.setAttribute("class", "headertools-image");
 						element_image.setAttribute("src", icon);
-						// element_image.style.width = "16px";
-						// element_image.style.height = "16px";
+						element_image.style.width = "16px";
+						element_image.style.height = "16px";
 						btn.appendChild(element_image);
 					}
 					if (label) {

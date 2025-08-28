@@ -7,6 +7,8 @@
 // console.log(`Message displayed in tab ${tab.id}: ${message.subject}`);
 // });
 
+import * as fnc from "./functions.js";
+
 function webserviceEndpoint() {
 	var endpoint = localStorage.getItem("webservice_endpoint_url");
 	if (endpoint == null || endpoint == undefined) {
@@ -39,6 +41,7 @@ function appendFormData(formData, data, parentKey = "") {
 }
 
 function webservice(service, params, callback) {
+	console.log("webservice", service, params);
 	if (!isSetWebserviceEndpoint()) {
 		if (callback != null) {
 			callback({
@@ -49,6 +52,7 @@ function webservice(service, params, callback) {
 		return false;
 	}
 	var webservice_endpoint_url = webserviceEndpoint() + "?ws=" + service;
+	console.log("webservice_endpoint_url", webservice_endpoint_url);
 	var form_data = new FormData();
 	// Object.keys(params).forEach(key => {
 	// 	form_data.append(key, params[key]);
@@ -80,6 +84,17 @@ function antispamAddMaildata(maildata, callback) {
 	webservice(
 		"antispam",
 		{ action: "addMaildata", maildata: maildata },
+		function (response) {
+			var result = webserviceResponseProcess(response);
+			if (callback != null) callback(result);
+		}
+	);
+}
+
+function antispamCheckMaildata(maildata, callback) {
+	webservice(
+		"antispam",
+		{ action: "checkMaildata", maildata: maildata },
 		function (response) {
 			var result = webserviceResponseProcess(response);
 			if (callback != null) callback(result);
@@ -189,10 +204,38 @@ browser.messageDisplay.onMessagesDisplayed.addListener(
 		let css_filepath = browser.runtime.getURL("css/experiment.css");
 		await browser.domainProvider.messageBrowserAddCSS(css_filepath);
 		await browser.domainProvider.headerRowClear();
-		let icon_path = browser.runtime.getURL("images/icon.svg");
-		await browser.domainProvider.headerAddIcon(icon_path, "Moja ikonka", "moja_ikonka");
-		await browser.domainProvider.headerAddButton("Tlacitko", icon_path, "moje_tlacitko");
+		// let icon_path = browser.runtime.getURL("images/icon.svg");
+		// await browser.domainProvider.headerAddIcon(icon_path, "Moja ikonka", "moja_ikonka");
+		// await browser.domainProvider.headerAddButton("Tlacitko", icon_path, "moje_tlacitko");
+		let loader_path = browser.runtime.getURL("images/loading.svg");
+		await browser.domainProvider.headerAddIcon(
+			loader_path,
+			browser.i18n.getMessage("loading"),
+			"loader"
+		);
+
+		var message = displayedMessages.messages[0];
+		console.log(message);
+		let maildata = await fnc.extractMessageInfo(message);
+		console.log("maildata", maildata);
+
+		antispamCheckMaildata(maildata, async (response) => {
+			console.log(response);
+			if (response.success == true) {
+				await browser.domainProvider.headerRowClear();
+				let ok_path = browser.runtime.getURL("images/ok.svg");
+				await browser.domainProvider.headerAddIcon(
+					ok_path,
+					response.result.html
+				);
+			} else {
+				await browser.domainProvider.headerRowClear();
+				let error_path = browser.runtime.getURL("images/error.svg");
+				await browser.domainProvider.headerAddIcon(
+					error_path,
+					response.message
+				);
+			}
+		});
 	}
 );
-
-// browser.headerTools.addIcon("images/icon.svg", "Moja ikonka");

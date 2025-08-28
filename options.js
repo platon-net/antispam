@@ -1,3 +1,5 @@
+import  * as fnc from "./functions.js";
+
 document.addEventListener('DOMContentLoaded', function() {
 	/* ----------------------------------------------------
 	 * Initialize
@@ -11,7 +13,7 @@ document.addEventListener('DOMContentLoaded', function() {
 	 */
 	document.getElementById('antispam_button_save').addEventListener('click', function() {
 		var webservice_endpoint_url = document.getElementById('webservice_endpoint_url').value;
-		requestSitePermission(webservice_endpoint_url, graned => {
+		fnc.requestSitePermission(webservice_endpoint_url, graned => {
 			if (graned) {
 				webserviceEndpointSave(webservice_endpoint_url);
 			}
