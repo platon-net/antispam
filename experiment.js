@@ -129,7 +129,7 @@ this.domainProvider = class extends ExtensionCommon.ExtensionAPI {
 					let header_row = getHeaderRow();
 					header_row.innerHTML = "";
 				},
-				async headerAddIcon(icon, label) {
+				async headerAddIcon(icon, label, elementID) {
 					console.log("headerAddIcon", icon, label);
 					let header_row = getHeaderRow();
 					let element_icon = header_row.ownerDocument.createElement("span");
@@ -152,9 +152,8 @@ this.domainProvider = class extends ExtensionCommon.ExtensionAPI {
 					// 	console.log("Klik na moju ikonku v hlavičke!");
 					// });
 					header_row.appendChild(element_icon);
-					return element_icon;
 				},
-				async headerAddButton(label, icon) {
+				async headerAddButton(label, icon, elementID) {
 					console.log("headerAddButton", label, icon);
 					let header_row = getHeaderRow();
 					let btn = header_row.ownerDocument.createElement("button");
@@ -177,8 +176,7 @@ this.domainProvider = class extends ExtensionCommon.ExtensionAPI {
 					// 	console.log("Klik na moje tlačidlo v hlavičke!");
 					// });
 					header_row.appendChild(btn);
-					return btn;
-				},
+				}
 			},
 		};
 	}

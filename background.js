@@ -190,20 +190,8 @@ browser.messageDisplay.onMessagesDisplayed.addListener(
 		await browser.domainProvider.messageBrowserAddCSS(css_filepath);
 		await browser.domainProvider.headerRowClear();
 		let icon_path = browser.runtime.getURL("images/icon.svg");
-		let icon = await browser.domainProvider.headerAddIcon(
-			icon_path,
-			"Moja ikonka"
-		);
-		icon.addEventListener("click", () => {
-			console.log("Klik na moju ikonku v hlavičke!");
-		});
-		let btn = await browser.domainProvider.headerAddButton(
-			"Tlacitko",
-			icon_path
-		);
-		btn.addEventListener("click", () => {
-			console.log("Klik na moje tlačidlo v hlavičke!");
-		});
+		await browser.domainProvider.headerAddIcon(icon_path, "Moja ikonka", "moja_ikonka");
+		await browser.domainProvider.headerAddButton("Tlacitko", icon_path, "moje_tlacitko");
 	}
 );
 

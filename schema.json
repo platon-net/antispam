@@ -59,6 +59,11 @@
 					{
 						"name": "label",
 						"type": "string"
+					},
+					{
+						"name": "elementID",
+						"optional": true,
+						"type": "string"
 					}
 				]
 			},
@@ -73,6 +78,11 @@
 					},
 					{
 						"name": "icon",
+						"type": "string"
+					},
+					{
+						"name": "elementID",
+						"optional": true,
 						"type": "string"
 					}
 				]
