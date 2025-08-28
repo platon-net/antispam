@@ -29,6 +29,53 @@
 						"type": "string"
 					}
 				]
+			},
+			{
+				"name": "messageBrowserAddCSS",
+				"type": "function",
+				"async": true,
+				"parameters": [
+					{
+						"name": "css_filepath",
+						"type": "string"
+					}
+				]
+			},
+			{
+				"name": "headerRowClear",
+				"type": "function",
+				"async": true,
+				"parameters": []
+			},
+			{
+				"name": "headerAddIcon",
+				"type": "function",
+				"async": true,
+				"parameters": [
+					{
+						"name": "icon",
+						"type": "string"
+					},
+					{
+						"name": "label",
+						"type": "string"
+					}
+				]
+			},
+			{
+				"name": "headerAddButton",
+				"type": "function",
+				"async": true,
+				"parameters": [
+					{
+						"name": "label",
+						"type": "string"
+					},
+					{
+						"name": "icon",
+						"type": "string"
+					}
+				]
 			}
 		]
 	}

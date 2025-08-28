@@ -1,0 +1,27 @@
+#messageHeader[show_header_mode="all"],
+#messageHeader.scrollable {
+	max-height: none !important;
+}
+#antispam-header-row {
+	display: flex;
+	flex-direction: row;
+	justify-content: flex-start;
+	gap: 10px;
+}
+.headertools-icon,
+.headertools-button {
+	display: flex;
+	flex-direction: row;
+	align-items: center;
+	gap: 5px;
+	width: auto;
+}
+.headertools-button {
+	cursor: pointer;
+}
+.headertools-image {
+	width: 16px;
+	height: 16px;
+}
+.headertools-label {
+}

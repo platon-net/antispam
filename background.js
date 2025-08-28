@@ -158,9 +158,12 @@ browser.messageDisplayAction.onClicked.addListener(async (tab) => {
 	let storage_popup_window = await browser.storage.local.get("popup_window_id");
 	if (storage_popup_window.popup_window_id != null) {
 		try {
-			const win = await browser.windows.get(storage_popup_window.popup_window_id, {
-				populate: true,
-			});
+			const win = await browser.windows.get(
+				storage_popup_window.popup_window_id,
+				{
+					populate: true,
+				}
+			);
 			if (win && win.tabs.length > 0) {
 				await browser.tabs.update(win.tabs[0].id, { url: new_url });
 				await browser.windows.update(win.id, { focused: true });
@@ -176,5 +179,32 @@ browser.messageDisplayAction.onClicked.addListener(async (tab) => {
 		width: 800,
 		height: 600,
 	});
-	await browser.storage.local.set({"popup_window_id": popup_window.id});
+	await browser.storage.local.set({ popup_window_id: popup_window.id });
 });
+
+browser.messageDisplay.onMessagesDisplayed.addListener(
+	async (tab, displayedMessages) => {
+		console.log("tab", tab);
+		console.log("displayedMessages", displayedMessages);
+		let css_filepath = browser.runtime.getURL("css/experiment.css");
+		await browser.domainProvider.messageBrowserAddCSS(css_filepath);
+		await browser.domainProvider.headerRowClear();
+		let icon_path = browser.runtime.getURL("images/icon.svg");
+		let icon = await browser.domainProvider.headerAddIcon(
+			icon_path,
+			"Moja ikonka"
+		);
+		icon.addEventListener("click", () => {
+			console.log("Klik na moju ikonku v hlavičke!");
+		});
+		let btn = await browser.domainProvider.headerAddButton(
+			"Tlacitko",
+			icon_path
+		);
+		btn.addEventListener("click", () => {
+			console.log("Klik na moje tlačidlo v hlavičke!");
+		});
+	}
+);
+
+// browser.headerTools.addIcon("images/icon.svg", "Moja ikonka");
