@@ -104,7 +104,7 @@ this.domainProvider = class extends ExtensionCommon.ExtensionAPI {
 					return ret;
 				},
 				async messageBrowserAddCSS(css_filepath) {
-					console.log("messageBrowserAddCSS", css_filepath);
+					// console.log("messageBrowserAddCSS", css_filepath);
 					let css_filepath_id =
 						"messageBrowserAddCSS-" + simpleHash(css_filepath);
 					let message_browser = getMessageBrowser();
@@ -130,7 +130,7 @@ this.domainProvider = class extends ExtensionCommon.ExtensionAPI {
 					header_row.innerHTML = "";
 				},
 				async headerAddIcon(icon, label, elementID) {
-					console.log("headerAddIcon", icon, label);
+					// console.log("headerAddIcon", icon, label);
 					let header_row = getHeaderRow();
 					let element_icon = header_row.ownerDocument.createElement("span");
 					element_icon.setAttribute("class", "headertools-icon");
@@ -145,7 +145,8 @@ this.domainProvider = class extends ExtensionCommon.ExtensionAPI {
 					if (label) {
 						let element_label = header_row.ownerDocument.createElement("span");
 						element_label.setAttribute("class", "headertools-label");
-						element_label.textContent = label;
+						// element_label.textContent = label;
+						element_label.innerHTML = label;
 						element_icon.appendChild(element_label);
 					}
 					// element_icon.addEventListener("click", () => {
@@ -154,7 +155,7 @@ this.domainProvider = class extends ExtensionCommon.ExtensionAPI {
 					header_row.appendChild(element_icon);
 				},
 				async headerAddButton(label, icon, elementID) {
-					console.log("headerAddButton", label, icon);
+					// console.log("headerAddButton", label, icon);
 					let header_row = getHeaderRow();
 					let btn = header_row.ownerDocument.createElement("button");
 					btn.setAttribute("class", "headertools-button");
@@ -176,21 +177,43 @@ this.domainProvider = class extends ExtensionCommon.ExtensionAPI {
 					// 	console.log("Klik na moje tlačidlo v hlavičke!");
 					// });
 					header_row.appendChild(btn);
-				}
+				},
+				async headerAddLink(url, label) {
+					// console.log("headerAddLink", url, label);
+					let header_row = getHeaderRow();
+					let element_link = header_row.ownerDocument.createElement("a");
+					element_link.setAttribute("class", "headertools-link");
+					element_link.href = url;
+					element_link.target = "_blank";
+					element_link.textContent = label;
+					// element_link.setAttribute("onclick", "browser.windows.openDefaultBrowser('"+url+"');");
+					// element_link.setAttribute("onclick", "console.log({name:'openURL',url:'"+url+"'});");
+					// element_link.setAttribute(
+					// 	"onclick",
+					// 	"window.open('" + url + "', '_blank');"
+					// );
+					// element_link.addEventListener("click", (e) => {
+					// 	console.log("click URL = "+url);
+					// 	e.preventDefault();
+					// });
+					header_row.appendChild(element_link);
+				},
+				async headerAddList(items) {
+					// console.log("headerAddList", items);
+					let header_row = getHeaderRow();
+					let element_list = header_row.ownerDocument.createElement("ul");
+					element_list.setAttribute("class", "headertools-list");
+					for (let i = 0; i < items.length; i++) {
+						let element_item = header_row.ownerDocument.createElement("li");
+						element_item.textContent = items[i];
+						element_list.appendChild(element_item);
+					}
+					header_row.appendChild(element_list);
+				},
 			},
 		};
 	}
 };
-
-function simpleHash(str) {
-	let hash = 0;
-	for (let i = 0; i < str.length; i++) {
-		let chr = str.charCodeAt(i);
-		hash = (hash << 5) - hash + chr;
-		hash |= 0; // Prevod na 32-bit integer
-	}
-	return hash;
-}
 
 function getMessageBrowser() {
 	let win = Services.wm.getMostRecentWindow("mail:3pane");
@@ -242,4 +265,15 @@ function getHeaderRow() {
 		message_header.appendChild(header_row);
 	}
 	return header_row;
+}
+
+// copy from functions.js
+function simpleHash(str) {
+	let hash = 0;
+	for (let i = 0; i < str.length; i++) {
+		let chr = str.charCodeAt(i);
+		hash = (hash << 5) - hash + chr;
+		hash |= 0; // Prevod na 32-bit integer
+	}
+	return hash;
 }

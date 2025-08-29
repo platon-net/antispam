@@ -86,6 +86,35 @@
 						"type": "string"
 					}
 				]
+			},
+			{
+				"name": "headerAddLink",
+				"type": "function",
+				"async": true,
+				"parameters": [
+					{
+						"name": "url",
+						"type": "string"
+					},
+					{
+						"name": "label",
+						"type": "string"
+					}
+				]
+			},
+			{
+				"name": "headerAddList",
+				"type": "function",
+				"async": true,
+				"parameters": [
+					{
+						"name": "items",
+						"type": "array",
+						"items": {
+							"type": "string"
+						}
+					}
+				]
 			}
 		]
 	}

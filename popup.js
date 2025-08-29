@@ -11,74 +11,79 @@ browser.tabs
 */
 const url = new URL(window.location.href);
 const tabId = parseInt(url.searchParams.get("tab_id"), 10);
-console.log("Tab ID:", tabId);
+let messageId = "";
+// console.log("Tab ID:", tabId);
+// console.log("Message ID:", messageId);
 
-		// console.log(messenger);
-		messenger.messageDisplay
-			.getDisplayedMessages(tabId)
-			.then((message_list) => {
-				var message = message_list.messages[0];
-				// console.log(message);
-				let sender_email = fnc.extractEmail(message.author);
-				let sender_domain = fnc.getDomainFromEmail(sender_email);
-				document.title = sender_email+": "+message.subject;
-				// To Info
-				if (Array.isArray(message.recipients)) {
-					for (let i = 0; i < message.recipients.length; i++) {
-						let recipient_email = fnc.extractEmail(message.recipients[i]);
-						document
-							.getElementById("info_recipients")
-							.appendChild(emailLine(recipient_email));
-						let recipient_domain = fnc.getDomainFromEmail(recipient_email);
-						let recipient_subdomains = fnc.extractSubdomains(recipient_domain);
-						for (let i = 0; i < recipient_subdomains.length; i++) {
-							document
-								.getElementById("info_recipients_subdomains")
-								.appendChild(subdomainLine(recipient_subdomains[i]));
-						}
-					}
-				}
-				// Form Info
-				let subdomains = fnc.extractSubdomains(sender_domain);
-				document.getElementById("info_sender").innerText = sender_email;
-				document.getElementById("info_sender_subdomains").innerHTML = "";
-				for (let i = 0; i < subdomains.length; i++) {
+// console.log(messenger);
+messenger.messageDisplay.getDisplayedMessages(tabId).then((message_list) => {
+	var message = message_list.messages[0];
+	// console.log(message);
+	messageId = fnc.simpleHash(message.headerMessageId);
+	let sender_email = fnc.extractEmail(message.author);
+	let sender_domain = fnc.getDomainFromEmail(sender_email);
+	document.title = sender_email + ": " + message.subject;
+	// To Info
+	if (Array.isArray(message.recipients)) {
+		for (let i = 0; i < message.recipients.length; i++) {
+			let recipient_email = fnc.extractEmail(message.recipients[i]);
+			document
+				.getElementById("info_recipients")
+				.appendChild(emailLine(recipient_email));
+			let recipient_domain = fnc.getDomainFromEmail(recipient_email);
+			let recipient_subdomains = fnc.extractSubdomains(recipient_domain);
+			for (let i = 0; i < recipient_subdomains.length; i++) {
+				document
+					.getElementById("info_recipients_subdomains")
+					.appendChild(subdomainLine(recipient_subdomains[i]));
+			}
+		}
+	}
+	// Form Info
+	let subdomains = fnc.extractSubdomains(sender_domain);
+	document.getElementById("info_sender").innerText = sender_email;
+	document.getElementById("info_sender_subdomains").innerHTML = "";
+	for (let i = 0; i < subdomains.length; i++) {
+		document
+			.getElementById("info_sender_subdomains")
+			.appendChild(subdomainLine(subdomains[i]));
+	}
+	// Form Summary
+	document.getElementById("antispam_recipients").value =
+		message.recipients.join(", ");
+	document.getElementById("antispam_sender").value = sender_email;
+	document.getElementById("antispam_sender_domain").value = sender_domain;
+	document.getElementById("antispam_subject").value = message.subject;
+	messenger.messages.getFull(message.id).then((message_part) => {
+		// console.log(message_part);
+		let replyto = message_part.headers["reply-to"];
+		if (replyto != null && Array.isArray(replyto) && replyto.length > 0) {
+			// console.log("replyto", replyto);
+			for (let i = 0; i < replyto.length; i++) {
+				let replyto_email = fnc.extractEmail(replyto[i]);
+				document
+					.getElementById("info_sender_replytos")
+					.appendChild(emailLine(replyto_email));
+				let replyto_domain = fnc.getDomainFromEmail(replyto_email);
+				let replyto_subdomains = fnc.extractSubdomains(replyto_domain);
+				for (let i = 0; i < replyto_subdomains.length; i++) {
 					document
-						.getElementById("info_sender_subdomains")
-						.appendChild(subdomainLine(subdomains[i]));
+						.getElementById("info_replyto_subdomains")
+						.appendChild(subdomainLine(replyto_subdomains[i]));
 				}
-				// Form Summary
-				document.getElementById("antispam_recipients").value =
-					message.recipients.join(", ");
-				document.getElementById("antispam_sender").value = sender_email;
-				document.getElementById("antispam_sender_domain").value = sender_domain;
-				document.getElementById("antispam_subject").value = message.subject;
-				messenger.messages.getFull(message.id).then((message_part) => {
-					// console.log(message_part);
-					let replyto = message_part.headers["reply-to"];
-					if (replyto != null
-						&& Array.isArray(replyto)
-						&& replyto.length > 0)
-					{
-						// console.log("replyto", replyto);
-						for (let i = 0; i < replyto.length; i++) {
-							let replyto_email = fnc.extractEmail(replyto[i]);
-							document
-								.getElementById("info_sender_replytos")
-								.appendChild(emailLine(replyto_email));
-							let replyto_domain = fnc.getDomainFromEmail(replyto_email);
-							let replyto_subdomains = fnc.extractSubdomains(replyto_domain);
-							for (let i = 0; i < replyto_subdomains.length; i++) {
-								document
-									.getElementById("info_replyto_subdomains")
-									.appendChild(subdomainLine(replyto_subdomains[i]));
-							}
-						}
-					}
-					document.getElementById("antispam_ipaddresses").textContent =
-						fnc.extractIPAddresses(message_part.headers.received);
-				});
-			});
+			}
+		}
+		document.getElementById("antispam_ipaddresses").textContent =
+			fnc.extractIPAddresses(message_part.headers.received);
+	});
+	// check infoMaildata
+	browser.runtime.sendMessage({"name":"cacheInfoMaildata", "messageId": messageId}, (response) => {
+		// console.log("cacheInfoMaildata", response);
+		if (response != null) {
+			printInfoMaidata(response.result);
+		}
+	});
+});
 //	});
 
 document.addEventListener("DOMContentLoaded", function () {
@@ -160,6 +165,20 @@ document.addEventListener("DOMContentLoaded", function () {
 		});
 });
 
+browser.runtime.onMessage.addListener(function (request, sender, sendResponse) {
+	// console.log(request);
+	if (request.message_id != messageId) return true;
+	switch (request.name) {
+		case "infoMaildata":
+			// console.log("infoMaildata", request);
+			if (request.info.success) {
+				printInfoMaidata(request.info.result);
+			}
+			break;
+	}
+	return true;
+});
+
 function switchForm(form_id) {
 	document.querySelectorAll(".form").forEach((element) => {
 		element.classList.add("hide");
@@ -201,12 +220,11 @@ function antispamEmailrule(type, pattern, output_object) {
 		document.getElementById("webservice").innerText =
 			browser.i18n.getMessage("loading");
 	} else {
-		output_object.innerText =
-		browser.i18n.getMessage("loading");
+		output_object.innerText = browser.i18n.getMessage("loading");
 	}
 	browser.runtime.sendMessage(
 		{ name: "antispamEmailrule", type: type, pattern: pattern },
-		function (response){
+		function (response) {
 			webserviceResponseHandler(response, output_object);
 		}
 	);
@@ -214,7 +232,7 @@ function antispamEmailrule(type, pattern, output_object) {
 
 function antispamEmailruleQuestion(type, pattern, button_obj) {
 	if (button_obj == null) {
-		question(browser.i18n.getMessage("create_rule")+"?", function (result) {
+		question(browser.i18n.getMessage("create_rule") + "?", function (result) {
 			if (result) {
 				antispamEmailrule(type, pattern);
 			} else {
@@ -226,7 +244,7 @@ function antispamEmailruleQuestion(type, pattern, button_obj) {
 	const inline = document.createElement("div");
 
 	const question = document.createElement("span");
-	question.innerText = browser.i18n.getMessage("create_rule")+"?";
+	question.innerText = browser.i18n.getMessage("create_rule") + "?";
 
 	const button_yes = document.createElement("button");
 	button_yes.innerText = browser.i18n.getMessage("yes");
@@ -516,4 +534,28 @@ function question(text, callback) {
 	question_callback_last = callback;
 	switchForm("question");
 	document.getElementById("question_text").textContent = text;
+}
+
+function printInfoMaidata(info) {
+	let div_rules = document.getElementById("rules");
+	div_rules.innerHTML = "";
+	let header = document.createElement("div");
+	header.textContent = "✅ " + info.msg;
+	div_rules.appendChild(header);
+	for (let i = 0; i < info.count; i++) {
+		let rule = info.rules[i];
+		let item = document.createElement("div");
+		item.style.paddingLeft = "5px";
+		let link = document.createElement("a");
+		link.href = rule.url;
+		link.target = "_blank";
+		link.textContent = "#" + rule.rule_id;
+		let desc = document.createElement("span");
+		desc.textContent = rule.pattern;
+		desc.style.paddingLeft = "10px";
+		item.appendChild(link);
+		item.appendChild(desc);
+		div_rules.appendChild(item);
+	}
+
 }

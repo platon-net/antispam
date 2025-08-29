@@ -5,19 +5,29 @@
 #antispam-header-row {
 	display: flex;
 	flex-direction: row;
+	flex-wrap: wrap;
 	justify-content: flex-start;
 	gap: 10px;
 }
 .headertools-icon,
-.headertools-button {
+.headertools-button,
+.headertools-link {
 	display: flex;
 	flex-direction: row;
 	align-items: center;
 	gap: 5px;
 	width: auto;
 }
-.headertools-button {
+.headertools-button,
+.headertools-link {
 	cursor: pointer;
+}
+.headertools-list {
+	flex-basis: 100%;
+	width: 100%;
+	margin: 0px;
+	padding: 0px;
+	padding-left: 15px;
 }
 .headertools-image {
 	width: 16px;

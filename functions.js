@@ -161,14 +161,37 @@ export async function extractMessageInfo(message) {
 		// console.log("replyto", replyto);
 		for (let i = 0; i < replyto.length; i++) {
 			let replyto_email = extractEmail(replyto[i]);
-			ret['replyto_emails'].push(replyto_email);
+			ret["replyto_emails"].push(replyto_email);
 			let replyto_domain = getDomainFromEmail(replyto_email);
 			let replyto_subdomains = extractSubdomains(replyto_domain);
 			for (let i = 0; i < replyto_subdomains.length; i++) {
-				ret['replyto_subdomains'].push(replyto_subdomains[i]);
+				ret["replyto_subdomains"].push(replyto_subdomains[i]);
 			}
 		}
 	}
-	ret['ipaddresses'] = extractIPAddresses(message_part.headers.received);
+	ret["ipaddresses"] = extractIPAddresses(message_part.headers.received);
 	return ret;
+}
+
+export function simpleHash(str) {
+	let hash = 0;
+	for (let i = 0; i < str.length; i++) {
+		let chr = str.charCodeAt(i);
+		hash = (hash << 5) - hash + chr;
+		hash |= 0; // Prevod na 32-bit integer
+	}
+	return hash;
+}
+
+// Uloží hodnotu pod zložený kľúč
+export async function sessionSet(key, value) {
+	let storageKey = `antispam_${key}`;
+	await browser.storage.session.set({ [storageKey]: value });
+}
+
+// Načíta hodnotu podľa zloženého kľúča
+export async function sessionGet(key) {
+	let storageKey = `antispam_${key}`;
+	let result = await browser.storage.session.get(storageKey);
+	return result[storageKey] ?? null;
 }

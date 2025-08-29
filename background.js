@@ -41,7 +41,7 @@ function appendFormData(formData, data, parentKey = "") {
 }
 
 function webservice(service, params, callback) {
-	console.log("webservice", service, params);
+	// console.log("webservice", service, params);
 	if (!isSetWebserviceEndpoint()) {
 		if (callback != null) {
 			callback({
@@ -52,7 +52,7 @@ function webservice(service, params, callback) {
 		return false;
 	}
 	var webservice_endpoint_url = webserviceEndpoint() + "?ws=" + service;
-	console.log("webservice_endpoint_url", webservice_endpoint_url);
+	// console.log("webservice_endpoint_url", webservice_endpoint_url);
 	var form_data = new FormData();
 	// Object.keys(params).forEach(key => {
 	// 	form_data.append(key, params[key]);
@@ -114,7 +114,7 @@ function antispamEmailrule(type, pattern, callback) {
 }
 
 async function folderAnalyze(params, callback) {
-	console.log("folderAnalyze");
+	// console.log("folderAnalyze");
 	let result = { status: "OK" };
 	let folder = await browser.folders.get(params.folderID);
 	if (folder == null) {
@@ -134,7 +134,7 @@ async function folderAnalyze(params, callback) {
 		if (callback != null) callback(result);
 		return false;
 	}
-	console.log("messages", messages);
+	// console.log("messages", messages);
 	result.unread = messages.messages;
 	for (var i = 0; i < result.unread.length; i++) {
 		let message_full = await browser.messages.getFull(result.unread[i].id);
@@ -144,7 +144,7 @@ async function folderAnalyze(params, callback) {
 }
 
 browser.runtime.onMessage.addListener(function (request, sender, sendResponse) {
-	//console.log(request);
+	// console.log(request);
 	switch (request.name) {
 		case "antispamAddMaildata":
 			antispamAddMaildata(request.maildata, function (result) {
@@ -161,6 +161,13 @@ browser.runtime.onMessage.addListener(function (request, sender, sendResponse) {
 				sendResponse(result);
 			});
 			break;
+		case "openURL":
+			browser.windows.openDefaultBrowser(request.url);
+			break;
+		case "cacheInfoMaildata":
+			let info = fnc.sessionGet("infoMaildata_" + request.messageId);
+			sendResponse(info);
+			break;
 		default:
 			sendResponse({ msg: "Unknown request" });
 			break;
@@ -168,7 +175,9 @@ browser.runtime.onMessage.addListener(function (request, sender, sendResponse) {
 	return true;
 });
 
+// ak sa klikne na tlacitko Antispam v zobrzeni emailu
 browser.messageDisplayAction.onClicked.addListener(async (tab) => {
+	// console.log("tab", tab, JSON.stringify(tab));
 	let new_url = "popup.html?tab_id=" + tab.id;
 	let storage_popup_window = await browser.storage.local.get("popup_window_id");
 	if (storage_popup_window.popup_window_id != null) {
@@ -197,10 +206,11 @@ browser.messageDisplayAction.onClicked.addListener(async (tab) => {
 	await browser.storage.local.set({ popup_window_id: popup_window.id });
 });
 
+// ak sa otvori tab s emailom
 browser.messageDisplay.onMessagesDisplayed.addListener(
 	async (tab, displayedMessages) => {
-		console.log("tab", tab);
-		console.log("displayedMessages", displayedMessages);
+		// console.log("tab", tab, JSON.stringify(tab));
+		// console.log("displayedMessages", JSON.stringify(displayedMessages));
 		let css_filepath = browser.runtime.getURL("css/experiment.css");
 		await browser.domainProvider.messageBrowserAddCSS(css_filepath);
 		await browser.domainProvider.headerRowClear();
@@ -215,19 +225,32 @@ browser.messageDisplay.onMessagesDisplayed.addListener(
 		);
 
 		var message = displayedMessages.messages[0];
-		console.log(message);
+		// console.log(message);
+		let message_id = fnc.simpleHash(message.headerMessageId);
 		let maildata = await fnc.extractMessageInfo(message);
-		console.log("maildata", maildata);
+		// console.log("maildata", maildata);
 
 		antispamCheckMaildata(maildata, async (response) => {
-			console.log(response);
+			// console.log(response);
+			fnc.sessionSet("infoMaildata_" + message_id, response);
+			browser.runtime.sendMessage({
+				name: "infoMaildata",
+				message_id: message_id,
+				info: response,
+			});
 			if (response.success == true) {
 				await browser.domainProvider.headerRowClear();
 				let ok_path = browser.runtime.getURL("images/ok.svg");
 				await browser.domainProvider.headerAddIcon(
 					ok_path,
-					response.result.html
+					response.result.msg
 				);
+				let items = [];
+				for (let i = 0; i < response.result.count; i++) {
+					let rule = response.result.rules[i];
+					items.push("#" + rule.rule_id + ": " + rule.pattern);
+				}
+				await browser.domainProvider.headerAddList(items);
 			} else {
 				await browser.domainProvider.headerRowClear();
 				let error_path = browser.runtime.getURL("images/error.svg");
