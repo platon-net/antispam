@@ -20,6 +20,12 @@
 				]
 			},
 			{
+				"name": "searchDomainInfo",
+				"type": "function",
+				"async": true,
+				"parameters": []
+			},
+			{
 				"name": "searchDomain",
 				"type": "function",
 				"async": true,
@@ -27,6 +33,25 @@
 					{
 						"name": "domain",
 						"type": "string"
+					}
+				]
+			},
+			{
+				"name": "searchDomain2",
+				"type": "function",
+				"async": true,
+				"parameters": [
+					{
+						"name": "domain",
+						"type": "string"
+					},
+					{
+						"name": "id_from",
+						"type": "integer"
+					},
+					{
+						"name": "id_to",
+						"type": "integer"
 					}
 				]
 			},

@@ -196,7 +196,6 @@ document.addEventListener("DOMContentLoaded", function () {
 			browser.messages.move([message.id], folder_id).then(() => {
 				switchForm("form_info");
 			});
-
 		});
 
 	/* ----------------------------------------------------
@@ -518,7 +517,7 @@ function filterSender(sender) {
 
 function filterDomain(domain) {
 	//filterFulltext("@" + domain);
-	domainProviderSearchDomain(domain);
+	domainProviderSearchDomain2(domain);
 }
 
 function filterFulltext(text) {
@@ -596,6 +595,56 @@ async function domainProviderSearchDomain(domain) {
 			browser.i18n.getMessage("search_empty") +
 			"</td></tr>";
 	}
+}
+
+async function domainProviderSearchDomain2(domain) {
+	switchForm("messagelist");
+	let progress = document.getElementById("messagelist_progress");
+	let progress_percent = document.getElementById(
+		"messagelist_progress_percent"
+	);
+	progress.value = 0;
+	progress_percent.innerText = "0%";
+
+	document.getElementById("messagelist_messages").innerHTML = "";
+	// console.log("domainProviderSearchDomain2", domain);
+	let search_info = await browser.domainProvider.searchDomainInfo();
+	// console.log("search_info", search_info);
+	let min = search_info.min;
+	let max = search_info.max;
+	let diff = max - min;
+	let step = Math.max(Math.round(diff / 100), 10000); // minimal step is 10.000
+	let checked = 0;
+	// console.log("min", min, "max", max, "step", step);
+	let count = 0;
+	for (let i = min - 1; i < max; i += step) {
+		let rows = await browser.domainProvider.searchDomain2(
+			domain,
+			i + 1,
+			i + step
+		);
+		for (let j = 0; j < rows.length; j++) {
+			let message = rows[j];
+			// console.log('message', message);
+			let id = message.docid;
+			let subject = fnc.escapeHTML(message.subject);
+			let sender = fnc.escapeHTML(message.sender);
+			let date = fnc.formatDate(new Date(message.date / 1000));
+			fnc.tableAdd("messagelist_table", [id, subject, sender, date]);
+		}
+		count += rows.length;
+		checked += step;
+		progress.value = (checked / diff) * 100;
+		progress_percent.innerText =
+			Math.round(progress.value) +
+			"% 🠢 " +
+			count +
+			" " +
+			browser.i18n.getMessage("messages_found");
+	}
+	progress.value = 100;
+	progress_percent.innerText =
+		count + " " + browser.i18n.getMessage("messages_found");
 }
 
 var question_callback_last = null;

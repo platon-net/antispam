@@ -76,9 +76,19 @@ this.domainProvider = class extends ExtensionCommon.ExtensionAPI {
 				async register() {
 					// console.log("Domain provider registered");
 				},
+				async searchDomainInfo() {
+					let db = await Sqlite.openConnection({ path });
+					let rows = await db.execute(
+						"SELECT MIN(docid) AS min, MAX(docid) AS max FROM messagesText_content"
+					);
+					await db.close();
+					return {
+						min: rows[0].getResultByName("min"),
+						max: rows[0].getResultByName("max"),
+					};
+				},
 				async searchDomain(domain) {
 					let db = await Sqlite.openConnection({ path });
-
 					// console.log("Search domain:", domain);
 					let rows = await db.execute(
 						"SELECT * FROM messagesText_content AS content" +
@@ -99,7 +109,32 @@ this.domainProvider = class extends ExtensionCommon.ExtensionAPI {
 							date: row.getResultByName("date"),
 						});
 					}
-
+					await db.close();
+					return ret;
+				},
+				async searchDomain2(domain, id_from, id_to) {
+					let db = await Sqlite.openConnection({ path });
+					// console.log("Search domain2:", domain, id_from, id_to);
+					let rows = await db.execute(
+						"SELECT * FROM messagesText_content AS content" +
+							" LEFT JOIN messages AS msgs ON msgs.id = content.docid" +
+							" WHERE (content.c3author LIKE :domain" +
+							" OR content.c4recipients LIKE :domain)" +
+							" AND content.docid BETWEEN :id_from AND :id_to",
+						{ domain: `%@${domain}%`, id_from, id_to }
+					);
+					// console.log("vysledok:", rows);
+					let ret = [];
+					for (let row of rows) {
+						ret.push({
+							docid: row.getResultByName("docid"), //docid,
+							body: row.getResultByName("c0body"), //c0body,
+							subject: row.getResultByName("c1subject"), //c1subject,
+							sender: row.getResultByName("c3author"), //c3author,
+							recipients: row.getResultByName("c4recipients"), //c4recipients,
+							date: row.getResultByName("date"),
+						});
+					}
 					await db.close();
 					return ret;
 				},
