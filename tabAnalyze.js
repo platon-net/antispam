@@ -37,11 +37,11 @@ function analyzeRun(params, callback) {
 				var message = response.unread[i];
 				// console.log('message', message);
 				let id = message.id;
-				let subject = escapeHTML(message.subject);
-				let sender = escapeHTML(message.author);
-				let sender_domain = getDomainFromEmail(message.author);
-				let recipients = escapeHTML(message.recipients.join(", "));
-				let ipaddresses = extractIPAddresses(message.full.headers.received);
+				let subject = fnc.escapeHTML(message.subject);
+				let sender = fnc.escapeHTML(message.author);
+				let sender_domain = fnc.getDomainFromEmail(message.author);
+				let recipients = fnc.escapeHTML(message.recipients.join(", "));
+				let ipaddresses = fnc.extractIPAddresses(message.full.headers.received);
 				fnc.tableAdd(
 					"antispam_messages",
 					[id, sender, sender_domain, recipients, subject, ipaddresses, '']

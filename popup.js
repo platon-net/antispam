@@ -554,9 +554,9 @@ async function filterMessages(queryParams) {
 		var message = msgs.messages[i];
 		// console.log('message', message);
 		let id = message.id;
-		let subject = escapeHTML(message.subject);
-		let sender = escapeHTML(message.author);
-		let date = formatDate(message.date);
+		let subject = fnc.escapeHTML(message.subject);
+		let sender = fnc.escapeHTML(message.author);
+		let date = fnc.formatDate(message.date);
 		fnc.tableAdd("messagelist_table", [id, subject, sender, date]);
 	}
 	if (msgs.messages.length == 0) {
@@ -585,9 +585,9 @@ async function domainProviderSearchDomain(domain) {
 		var message = rows[i];
 		// console.log('message', message);
 		let id = message.docid;
-		let subject = escapeHTML(message.subject);
-		let sender = escapeHTML(message.sender);
-		let date = formatDate(new Date(message.date / 1000));
+		let subject = fnc.escapeHTML(message.subject);
+		let sender = fnc.escapeHTML(message.sender);
+		let date = fnc.formatDate(new Date(message.date / 1000));
 		fnc.tableAdd("messagelist_table", [id, subject, sender, date]);
 	}
 	if (rows.length == 0) {
