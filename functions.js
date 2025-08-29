@@ -183,15 +183,28 @@ export function simpleHash(str) {
 	return hash;
 }
 
-// Uloží hodnotu pod zložený kľúč
+// Uloží hodnotu pre aktualnu session pod zložený kľúč
 export async function sessionSet(key, value) {
 	let storageKey = `antispam_${key}`;
 	await browser.storage.session.set({ [storageKey]: value });
 }
 
-// Načíta hodnotu podľa zloženého kľúča
+// Načíta hodnotu pre aktualnu session podľa zloženého kľúča
 export async function sessionGet(key) {
 	let storageKey = `antispam_${key}`;
 	let result = await browser.storage.session.get(storageKey);
+	return result[storageKey] ?? null;
+}
+
+// Uloží hodnotu lokalne pod zložený kľúč
+export async function localSet(key, value) {
+	let storageKey = `antispam_${key}`;
+	await browser.storage.local.set({ [storageKey]: value });
+}
+
+// Načíta hodnotu lokalne podľa zloženého kľúča
+export async function localGet(key) {
+	let storageKey = `antispam_${key}`;
+	let result = await browser.storage.local.get(storageKey);
 	return result[storageKey] ?? null;
 }

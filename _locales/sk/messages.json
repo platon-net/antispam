@@ -17,6 +17,9 @@
 	"form_summary_show": {
 		"message": "Sumarizačný formulár"
 	},
+	"form_move_show": {
+		"message": "Presunúť e-mail"
+	},
 	"Recipient": {
 		"message": "Príjemca"
 	},
@@ -115,5 +118,14 @@
 	},
 	"no": {
 		"message": "Nie"
+	},
+	"move_email": {
+		"message": "Presunúť e-mail do priečinka"
+	},
+	"folder": {
+		"message": "Priečinok"
+	},
+	"move": {
+		"message": "Presunúť"
 	}
 }

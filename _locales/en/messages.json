@@ -17,6 +17,9 @@
 	"form_summary_show": {
 		"message": "Summary form"
 	},
+	"form_move_show": {
+		"message": "Presunúť e-mail"
+	},
 	"Recipient": {
 		"message": "Recipient"
 	},
@@ -115,5 +118,14 @@
 	},
 	"no": {
 		"message": "No"
+	},
+	"move_email": {
+		"message": "Move e-mail to folder"
+	},
+	"folder": {
+		"message": "Folder"
+	},
+	"move": {
+		"message": "Move"
 	}
 }

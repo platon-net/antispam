@@ -11,13 +11,14 @@ browser.tabs
 */
 const url = new URL(window.location.href);
 const tabId = parseInt(url.searchParams.get("tab_id"), 10);
-let messageId = "";
+var messageId = "";
+var message = {};
 // console.log("Tab ID:", tabId);
 // console.log("Message ID:", messageId);
 
 // console.log(messenger);
 messenger.messageDisplay.getDisplayedMessages(tabId).then((message_list) => {
-	var message = message_list.messages[0];
+	message = message_list.messages[0];
 	// console.log(message);
 	messageId = fnc.simpleHash(message.headerMessageId);
 	let sender_email = fnc.extractEmail(message.author);
@@ -76,13 +77,35 @@ messenger.messageDisplay.getDisplayedMessages(tabId).then((message_list) => {
 		document.getElementById("antispam_ipaddresses").textContent =
 			fnc.extractIPAddresses(message_part.headers.received);
 	});
-	// check infoMaildata
-	browser.runtime.sendMessage({"name":"cacheInfoMaildata", "messageId": messageId}, (response) => {
-		// console.log("cacheInfoMaildata", response);
-		if (response != null) {
-			printInfoMaidata(response.result);
+	// Move to folder
+	messenger.accounts.list(true).then(async (accounts) => {
+		// console.log(accounts);
+		let form_move_folders = document.getElementById("form_move_folders");
+		for (let i = 0; i < accounts.length; i++) {
+			let optgroup = document.createElement("optgroup");
+			optgroup.label = accounts[i].name;
+			printSubfolders(
+				optgroup,
+				accounts[i].rootFolder.subFolders,
+				accounts[i].name
+			);
+			form_move_folders.appendChild(optgroup);
+		}
+		let move_folder_id = await fnc.localGet("move_folder_id");
+		if (move_folder_id != null) {
+			form_move_folders.value = move_folder_id;
 		}
 	});
+	// check infoMaildata
+	browser.runtime.sendMessage(
+		{ name: "cacheInfoMaildata", messageId: messageId },
+		(response) => {
+			// console.log("cacheInfoMaildata", response);
+			if (response != null) {
+				printInfoMaidata(response.result);
+			}
+		}
+	);
 });
 //	});
 
@@ -104,6 +127,12 @@ document.addEventListener("DOMContentLoaded", function () {
 		.getElementById("button_form_summary_show")
 		.addEventListener("click", function () {
 			switchForm("form_summary");
+		});
+
+	document
+		.getElementById("button_form_move_show")
+		.addEventListener("click", function () {
+			switchForm("form_move");
 		});
 
 	/* ----------------------------------------------------
@@ -146,6 +175,28 @@ document.addEventListener("DOMContentLoaded", function () {
 				subject: document.getElementById("antispam_subject").value,
 			};
 			antispamAddMaildata(maildata);
+		});
+
+	/* ----------------------------------------------------
+	 * Buttons Move
+	 */
+	document
+		.getElementById("antispam_button_move")
+		.addEventListener("click", function () {
+			if (message == null || message.id == null) {
+				alert(browser.i18n.getMessage("message_not_found"));
+				return;
+			}
+			let folder_id = document.getElementById("form_move_folders").value;
+			if (folder_id == null || folder_id == "") {
+				alert(browser.i18n.getMessage("folder_not_selected"));
+				return;
+			}
+			fnc.localSet("move_folder_id", folder_id);
+			browser.messages.move([message.id], folder_id).then(() => {
+				switchForm("form_info");
+			});
+
 		});
 
 	/* ----------------------------------------------------
@@ -439,6 +490,24 @@ function emailLine(email) {
 	return line;
 }
 
+function folderLine(folder, prefix) {
+	let option = document.createElement("option");
+	option.value = folder.id;
+	option.textContent = prefix + " 🠢 " + folder.name;
+	return option;
+}
+
+function printSubfolders(parent_element, subFolders, parent_name) {
+	for (let j = 0; j < subFolders.length; j++) {
+		parent_element.appendChild(folderLine(subFolders[j], parent_name));
+		printSubfolders(
+			parent_element,
+			subFolders[j].subFolders,
+			parent_name + " 🠢 " + subFolders[j].name
+		);
+	}
+}
+
 function filterSender(sender) {
 	filterMessages({
 		author: sender,
@@ -557,5 +626,4 @@ function printInfoMaidata(info) {
 		item.appendChild(desc);
 		div_rules.appendChild(item);
 	}
-
 }

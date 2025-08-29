@@ -19,7 +19,7 @@
 		}
 	},
 	"default_locale": "en",
-	"permissions": ["messagesRead", "storage", "accountsRead"],
+	"permissions": ["messagesRead", "messagesMove", "storage", "accountsRead"],
 	"optional_host_permissions": ["http://*/*", "https://*/*"],
 
 	"background": {
