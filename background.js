@@ -241,8 +241,9 @@ browser.messageDisplay.onMessagesDisplayed.addListener(
 			if (response.success == true) {
 				await browser.domainProvider.headerRowClear();
 				let ok_path = browser.runtime.getURL("images/ok.svg");
+				let exclamation_path = browser.runtime.getURL("images/exclamation.svg");
 				await browser.domainProvider.headerAddIcon(
-					ok_path,
+					response.result.count ? exclamation_path : ok_path,
 					response.result.msg
 				);
 				let items = [];
