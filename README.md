@@ -1,4 +1,4 @@
-<img src="images/icon.svg" width="32" height="32" alt="Logo"> Antispam
+<img src="images/icon2.svg" width="32" height="32" alt="Logo"> Antispam
 ========
 Send e-mail to antispam database from Thunderbird.
 
