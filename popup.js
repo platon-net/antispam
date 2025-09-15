@@ -42,7 +42,10 @@ messenger.messageDisplay.getDisplayedMessages(tabId).then((message_list) => {
 	}
 	// Form Info
 	let subdomains = fnc.extractSubdomains(sender_domain);
-	document.getElementById("info_sender").innerText = sender_email;
+	document.getElementById("info_sender_froms").innerText = "";
+	document
+		.getElementById("info_sender_froms")
+		.appendChild(emailLine(sender_email));
 	document.getElementById("info_sender_subdomains").innerHTML = "";
 	for (let i = 0; i < subdomains.length; i++) {
 		document
@@ -138,30 +141,7 @@ document.addEventListener("DOMContentLoaded", function () {
 	/* ----------------------------------------------------
 	 * Buttons Info
 	 */
-	document
-		.getElementById("info_copy_sender")
-		.addEventListener("click", function () {
-			fnc.toClipboard(
-				document.getElementById("info_sender").innerText,
-				document.getElementById("info_copy_sender")
-			);
-		});
 
-	document
-		.getElementById("info_filter_sender")
-		.addEventListener("click", function () {
-			filterSender(document.getElementById("info_sender").innerText);
-		});
-
-	document
-		.getElementById("info_create_rule_sender")
-		.addEventListener("click", function () {
-			antispamEmailruleQuestion(
-				"sender_email",
-				document.getElementById("info_sender").innerText,
-				document.getElementById("info_create_rule_sender")
-			);
-		});
 
 	/* ----------------------------------------------------
 	 * Button Send onClick
@@ -320,6 +300,7 @@ function antispamEmailruleQuestion(type, pattern, button_obj) {
 
 function subdomainLine(subdomain) {
 	const line = document.createElement("div");
+	line.setAttribute("data-subdomain", subdomain);
 
 	// Create a button for copying to clipboard
 	const button = document.createElement("button");
@@ -360,7 +341,8 @@ function subdomainLine(subdomain) {
 	});
 
 	const img_rule = document.createElement("img");
-	img_rule.src = "images/stop-urgent2.svg";
+	img_rule.classList.add("icon-add-rule");
+	img_rule.src = "images/icon-add-rule.svg";
 	img_rule.alt = browser.i18n.getMessage("create_rule");
 	img_rule.width = 20;
 	img_rule.height = 20;
@@ -424,6 +406,7 @@ function subdomainLine(subdomain) {
 
 function emailLine(email) {
 	const line = document.createElement("div");
+	line.setAttribute("data-email", email);
 
 	// Create a button for copying to clipboard
 	const button = document.createElement("button");
@@ -464,7 +447,8 @@ function emailLine(email) {
 	});
 
 	const img_rule = document.createElement("img");
-	img_rule.src = "images/stop-urgent2.svg";
+	img_rule.classList.add("icon-add-rule");
+	img_rule.src = "images/icon-add-rule.svg";
 	img_rule.alt = browser.i18n.getMessage("create_rule");
 	img_rule.width = 20;
 	img_rule.height = 20;
@@ -674,5 +658,18 @@ function printInfoMaidata(info) {
 		item.appendChild(link);
 		item.appendChild(desc);
 		div_rules.appendChild(item);
+		selectInfoValues(rule.values);
+	}
+}
+
+function selectInfoValues(values) {
+	for (let i = 0; i < values.length; i++) {
+		let value = values[i];
+		document.querySelectorAll('[data-email="'+value+'"]').forEach((element) => {
+			element.querySelector('.icon-add-rule').src = "images/icon-add-rule1.svg";
+		});
+		document.querySelectorAll('[data-subdomain="'+value+'"]').forEach((element) => {
+			element.querySelector('.icon-add-rule').src = "images/icon-add-rule1.svg";
+		});
 	}
 }

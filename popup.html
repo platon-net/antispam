@@ -19,22 +19,17 @@
 
 	<div id="form_info" class="form">
 		<div id="rules"></div>
+
 		<h3 class="light">__MSG_Sender__</h3>
 		<div class="attribute">
 			<div class="name">__MSG_sender__</div>
-			<div class="value"><button id="info_copy_sender" title="__MSG_copy_to_clipboard__"><img
-						src="images/copy.svg" alt="__MSG_copy_to_clipboard__" width="20" height="20"></button>
-				<button id="info_filter_sender" title="__MSG_filter__"><img src="images/filter.svg" alt="__MSG_filter__"
-						width="20" height="20"></button>
-				<button id="info_create_rule_sender" title="__MSG_create_rule__"><img src="images/stop-urgent2.svg" alt="__MSG_create_rule__"
-						width="20" height="20"></button>
-				<span id="info_sender"></span>
-			</div>
+			<div class="value" id="info_sender_froms"><span id="info_sender_from"></span></div>
 		</div>
 		<div class="attribute">
 			<div class="name">__MSG_sender_domain__</div>
 			<div class="value" id="info_sender_subdomains"><span id="info_sender_domain"></span></div>
 		</div>
+
 		<h3 class="light">__MSG_Reply_To__</h3>
 		<div class="attribute">
 			<div class="name">__MSG_replyto__</div>
@@ -44,6 +39,7 @@
 			<div class="name">__MSG_replyto_domain__</div>
 			<div class="value" id="info_replyto_subdomains"><span id="info_replyto_domain"></span></div>
 		</div>
+
 		<h3 class="light">__MSG_Recipient__</h3>
 		<div class="attribute">
 			<div class="name">__MSG_recipients__</div>
@@ -53,6 +49,7 @@
 			<div class="name">__MSG_recipients_domain__</div>
 			<div class="value" id="info_recipients_subdomains"></div>
 		</div>
+
 		<h3 class="light">__MSG_Other_info__</h3>
 		<div class="attribute">
 			<div class="name">__MSG_ipaddresses__</div>

@@ -62,11 +62,32 @@ function webservice(service, params, callback) {
 		method: "POST",
 		body: form_data,
 	})
-		.then((response) => response.json())
-		.then((json) => {
-			if (callback != null) callback(json);
+		.then((response) => {
+			response
+				.clone()
+				.json()
+				.then((json) => {
+					if (callback != null) callback(json);
+				})
+				.catch((error) => {
+					console.error("Error parsing JSON:", error);
+					response
+						.clone()
+						.text()
+						.then((text) => {
+							const match = text.match(/Fatal error[\s\S]*/i);
+							if (match) {
+								const fatalErrorText = match[0]
+									.replace(/<[^>]+>/g, "") // odstráni HTML tagy
+									.trim();
+								console.error(fatalErrorText);
+							}
+						});
+				});
 		})
-		.catch((error) => console.error("Error loading MMDB:", error));
+		.catch((error) => {
+			console.error("Error sending request:", error);
+		});
 }
 
 function webserviceResponseProcess(response) {
