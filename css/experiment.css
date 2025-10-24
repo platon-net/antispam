@@ -7,7 +7,7 @@
 	flex-direction: row;
 	flex-wrap: wrap;
 	justify-content: flex-start;
-	gap: 10px;
+	gap: 2px;
 }
 .headertools-icon,
 .headertools-button,
@@ -17,6 +17,9 @@
 	align-items: center;
 	gap: 5px;
 	width: auto;
+}
+div.headertools-icon {
+	width: 100%;
 }
 .headertools-button,
 .headertools-link {

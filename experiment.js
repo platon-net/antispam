@@ -164,10 +164,10 @@ this.domainProvider = class extends ExtensionCommon.ExtensionAPI {
 					let header_row = getHeaderRow();
 					header_row.innerHTML = "";
 				},
-				async headerAddIcon(icon, label, elementID) {
+				async headerAddIcon(icon, label, as_div) {
 					// console.log("headerAddIcon", icon, label);
 					let header_row = getHeaderRow();
-					let element_icon = header_row.ownerDocument.createElement("span");
+					let element_icon = header_row.ownerDocument.createElement(as_div ? "div" : "span");
 					element_icon.setAttribute("class", "headertools-icon");
 					if (icon) {
 						let element_image = header_row.ownerDocument.createElement("img");

@@ -241,8 +241,7 @@ browser.messageDisplay.onMessagesDisplayed.addListener(
 		let loader_path = browser.runtime.getURL("images/loading.svg");
 		await browser.domainProvider.headerAddIcon(
 			loader_path,
-			browser.i18n.getMessage("loading"),
-			"loader"
+			browser.i18n.getMessage("loading")
 		);
 
 		var message = displayedMessages.messages[0];
@@ -262,23 +261,32 @@ browser.messageDisplay.onMessagesDisplayed.addListener(
 			if (response.success == true) {
 				await browser.domainProvider.headerRowClear();
 				let ok_path = browser.runtime.getURL("images/ok.svg");
+				let ok_blue_path = browser.runtime.getURL("images/ok-blue.svg");
 				let exclamation_path = browser.runtime.getURL("images/exclamation.svg");
 				await browser.domainProvider.headerAddIcon(
 					response.result.count ? exclamation_path : ok_path,
-					response.result.msg
+					response.result.msg,
+					true
 				);
-				let items = [];
+				// let items = [];
 				for (let i = 0; i < response.result.count; i++) {
 					let rule = response.result.rules[i];
-					items.push("#" + rule.rule_id + ": " + rule.pattern);
+					let msg = "#" + rule.rule_id + ": " + rule.pattern;
+					// items.push("#" + rule.rule_id + ": " + rule.pattern);
+					await browser.domainProvider.headerAddIcon(
+						(rule.enabled == "1") ? exclamation_path : ok_blue_path,
+						msg,
+						true
+					);
 				}
-				await browser.domainProvider.headerAddList(items);
+				// await browser.domainProvider.headerAddList(items);
 			} else {
 				await browser.domainProvider.headerRowClear();
 				let error_path = browser.runtime.getURL("images/error.svg");
 				await browser.domainProvider.headerAddIcon(
 					error_path,
-					response.message
+					response.message,
+					true
 				);
 			}
 		});

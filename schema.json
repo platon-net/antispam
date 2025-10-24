@@ -86,9 +86,9 @@
 						"type": "string"
 					},
 					{
-						"name": "elementID",
+						"name": "as_div",
 						"optional": true,
-						"type": "string"
+						"type": "boolean"
 					}
 				]
 			},
