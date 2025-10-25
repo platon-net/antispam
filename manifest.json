@@ -2,7 +2,7 @@
 	"manifest_version": 3,
 	"name": "Antispam",
 	"description": "__MSG_description__",
-	"version": "1.13",
+	"version": "1.14",
 	"author": "Platon Technologies",
 	"developer": {
 		"name": "Platon Technologies",
@@ -18,7 +18,7 @@
 		"gecko": {
 			"id": "antispam@platon.sk",
 			"strict_min_version": "128.0",
-			"strict_max_version": "142.*"
+			"strict_max_version": "144.*"
 		}
 	},
 	"default_locale": "en",
