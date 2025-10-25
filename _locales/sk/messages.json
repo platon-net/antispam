@@ -65,6 +65,9 @@
 	"webserviceEndpointURL": {
 		"message": "URL webovej služby"
 	},
+	"webserviceToken": {
+		"message": "Token webovej služby"
+	},
 	"save": {
 		"message": "Uložiť"
 	},

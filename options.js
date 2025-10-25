@@ -8,6 +8,10 @@ document.addEventListener('DOMContentLoaded', function() {
 	if (webservice_endpoint_url == null) webservice_endpoint_url = '';
 	document.getElementById('webservice_endpoint_url').value = webservice_endpoint_url;
 
+	var webservice_token = localStorage.getItem('webservice_token');
+	if (webservice_token == null) webservice_token = '';
+	document.getElementById('webservice_token').value = webservice_token;
+
 	/* ----------------------------------------------------
 	 * Button Save onClick
 	 */
@@ -18,6 +22,8 @@ document.addEventListener('DOMContentLoaded', function() {
 				webserviceEndpointSave(webservice_endpoint_url);
 			}
 		});
+		var webservice_token = document.getElementById('webservice_token').value;
+		localStorage.setItem('webservice_token', webservice_token);
 	});
 
 

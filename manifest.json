@@ -2,7 +2,7 @@
 	"manifest_version": 3,
 	"name": "Antispam",
 	"description": "__MSG_description__",
-	"version": "1.14",
+	"version": "1.15",
 	"author": "Platon Technologies",
 	"developer": {
 		"name": "Platon Technologies",

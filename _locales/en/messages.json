@@ -65,6 +65,9 @@
 	"webserviceEndpointURL": {
 		"message": "URL of webservice"
 	},
+	"webserviceToken": {
+		"message": "Token for webservice"
+	},
 	"save": {
 		"message": "Save"
 	},

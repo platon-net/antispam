@@ -21,6 +21,10 @@ function isSetWebserviceEndpoint() {
 	return webserviceEndpoint().length > 0;
 }
 
+function webserviceToken() {
+	return localStorage.getItem("webservice_token");
+}
+
 function appendFormData(formData, data, parentKey = "") {
 	if (
 		data &&
@@ -58,6 +62,7 @@ function webservice(service, params, callback) {
 	// 	form_data.append(key, params[key]);
 	// });
 	appendFormData(form_data, params);
+	form_data.append("token", webserviceToken());
 	fetch(webservice_endpoint_url, {
 		method: "POST",
 		body: form_data,
