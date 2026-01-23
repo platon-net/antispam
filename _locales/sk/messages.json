@@ -133,5 +133,8 @@
 	},
 	"messages_found": {
 		"message": "najdených e-mailov"
+	},
+	"reloadPopup": {
+		"message": "Obnoviť okno pri zmene zobrazeneho e-mailu"
 	}
 }

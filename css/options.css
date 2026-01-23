@@ -28,7 +28,7 @@ button:hover {
         background-color: #23222B;
         color: white;
     }
-	input, textarea {
+	input, textarea, select {
 		background-color: #1C1B22;
 		border: 1px #4E4D54 solid;
 		color: white;

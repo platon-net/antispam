@@ -25,6 +25,11 @@ function webserviceToken() {
 	return localStorage.getItem("webservice_token");
 }
 
+function isReloadPopupEnabled() {
+	let reload_popup = localStorage.getItem("reload_popup"); // default is enabled
+	return reload_popup == null || reload_popup.length <= 0 || reload_popup == "1";
+}
+
 function appendFormData(formData, data, parentKey = "") {
 	if (
 		data &&
@@ -204,25 +209,10 @@ browser.runtime.onMessage.addListener(function (request, sender, sendResponse) {
 // ak sa klikne na tlacitko Antispam v zobrzeni emailu
 browser.messageDisplayAction.onClicked.addListener(async (tab) => {
 	// console.log("tab", tab, JSON.stringify(tab));
+	let reloaded = await popupReloadBYTabID(tab.id);
+	console.log("reloaded", reloaded);
+	if (reloaded) return;
 	let new_url = "popup.html?tab_id=" + tab.id;
-	let storage_popup_window = await browser.storage.local.get("popup_window_id");
-	if (storage_popup_window.popup_window_id != null) {
-		try {
-			const win = await browser.windows.get(
-				storage_popup_window.popup_window_id,
-				{
-					populate: true,
-				}
-			);
-			if (win && win.tabs.length > 0) {
-				await browser.tabs.update(win.tabs[0].id, { url: new_url });
-				await browser.windows.update(win.id, { focused: true });
-				return;
-			}
-		} catch (err) {
-			// console.log("err", err);
-		}
-	}
 	let popup_window = await browser.windows.create({
 		url: new_url,
 		type: "popup",
@@ -232,9 +222,33 @@ browser.messageDisplayAction.onClicked.addListener(async (tab) => {
 	await browser.storage.local.set({ popup_window_id: popup_window.id });
 });
 
+async function popupReloadBYTabID(tab_id) {
+	console.log("popupReloadBYTabID", tab_id);
+	let new_url = "popup.html?tab_id=" + tab_id;
+	let storage_popup_window = await browser.storage.local.get("popup_window_id");
+	if (storage_popup_window.popup_window_id == null) return false;
+	try {
+		const win = await browser.windows.get(
+			storage_popup_window.popup_window_id,
+			{
+				populate: true,
+			}
+		);
+		if (win && win.tabs.length > 0) {
+			await browser.tabs.update(win.tabs[0].id, { url: new_url });
+			await browser.windows.update(win.id, { focused: true });
+			return true;
+		}
+	} catch (err) {
+		// console.log("err", err);
+	}
+	return false;
+}
+
 // ak sa otvori tab s emailom
 browser.messageDisplay.onMessagesDisplayed.addListener(
 	async (tab, displayedMessages) => {
+		console.log('otvoril sa tab s emailom');
 		// console.log("tab", tab, JSON.stringify(tab));
 		// console.log("displayedMessages", JSON.stringify(displayedMessages));
 		let css_filepath = browser.runtime.getURL("css/experiment.css");
@@ -295,5 +309,9 @@ browser.messageDisplay.onMessagesDisplayed.addListener(
 				);
 			}
 		});
+
+		if (isReloadPopupEnabled()) {
+			popupReloadBYTabID(tab.id);
+		}
 	}
 );

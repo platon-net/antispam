@@ -12,6 +12,10 @@ document.addEventListener('DOMContentLoaded', function() {
 	if (webservice_token == null) webservice_token = '';
 	document.getElementById('webservice_token').value = webservice_token;
 
+	var reload_popup = localStorage.getItem('reload_popup');
+	if (reload_popup == null) reload_popup = '1';
+	document.getElementById('reload_popup').value = reload_popup;
+
 	/* ----------------------------------------------------
 	 * Button Save onClick
 	 */
@@ -24,6 +28,8 @@ document.addEventListener('DOMContentLoaded', function() {
 		});
 		var webservice_token = document.getElementById('webservice_token').value;
 		localStorage.setItem('webservice_token', webservice_token);
+		var reload_popup = document.getElementById('reload_popup').value;
+		localStorage.setItem('reload_popup', reload_popup);
 	});
 
 
