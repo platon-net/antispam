@@ -28,13 +28,4 @@ document.addEventListener("DOMContentLoaded", function () {
 			});
 		});
 
-	/* ----------------------------------------------------
-	 * Button Search Domain onClick
-	 */
-	document
-		.getElementById("antispam_button_search_domain")
-		.addEventListener("click", async function () {
-			let count = await browser.domainProvider.searchDomain("exitapi.com");
-			console.log(count);
-		});
 });

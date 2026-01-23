@@ -210,7 +210,7 @@ browser.runtime.onMessage.addListener(function (request, sender, sendResponse) {
 browser.messageDisplayAction.onClicked.addListener(async (tab) => {
 	// console.log("tab", tab, JSON.stringify(tab));
 	let reloaded = await popupReloadBYTabID(tab.id);
-	console.log("reloaded", reloaded);
+	// console.log("reloaded", reloaded);
 	if (reloaded) return;
 	let new_url = "popup.html?tab_id=" + tab.id;
 	let popup_window = await browser.windows.create({
@@ -223,7 +223,7 @@ browser.messageDisplayAction.onClicked.addListener(async (tab) => {
 });
 
 async function popupReloadBYTabID(tab_id) {
-	console.log("popupReloadBYTabID", tab_id);
+	// console.log("popupReloadBYTabID", tab_id);
 	let new_url = "popup.html?tab_id=" + tab_id;
 	let storage_popup_window = await browser.storage.local.get("popup_window_id");
 	if (storage_popup_window.popup_window_id == null) return false;
@@ -248,20 +248,24 @@ async function popupReloadBYTabID(tab_id) {
 // ak sa otvori tab s emailom
 browser.messageDisplay.onMessagesDisplayed.addListener(
 	async (tab, displayedMessages) => {
-		console.log('otvoril sa tab s emailom');
+		// console.log('otvoril sa tab s emailom');
 		// console.log("tab", tab, JSON.stringify(tab));
 		// console.log("displayedMessages", JSON.stringify(displayedMessages));
 		let css_filepath = browser.runtime.getURL("css/experiment.css");
-		await browser.domainProvider.messageBrowserAddCSS(css_filepath);
-		await browser.domainProvider.headerRowClear();
-		// let icon_path = browser.runtime.getURL("images/icon.svg");
-		// await browser.domainProvider.headerAddIcon(icon_path, "Moja ikonka", "moja_ikonka");
-		// await browser.domainProvider.headerAddButton("Tlacitko", icon_path, "moje_tlacitko");
-		let loader_path = browser.runtime.getURL("images/loading.svg");
-		await browser.domainProvider.headerAddIcon(
-			loader_path,
-			browser.i18n.getMessage("loading")
-		);
+		if (typeof browser !== "undefined" &&
+			browser.domainProvider !== undefined)
+		{
+			await browser.domainProvider.messageBrowserAddCSS(css_filepath);
+			await browser.domainProvider.headerRowClear();
+			// let icon_path = browser.runtime.getURL("images/icon.svg");
+			// await browser.domainProvider.headerAddIcon(icon_path, "Moja ikonka", "moja_ikonka");
+			// await browser.domainProvider.headerAddButton("Tlacitko", icon_path, "moje_tlacitko");
+			let loader_path = browser.runtime.getURL("images/loading.svg");
+			await browser.domainProvider.headerAddIcon(
+				loader_path,
+				browser.i18n.getMessage("loading")
+			);
+		}
 
 		var message = displayedMessages.messages[0];
 		// console.log(message);
@@ -277,36 +281,40 @@ browser.messageDisplay.onMessagesDisplayed.addListener(
 				message_id: message_id,
 				info: response,
 			});
-			if (response.success == true) {
-				await browser.domainProvider.headerRowClear();
-				let ok_path = browser.runtime.getURL("images/ok.svg");
-				let ok_blue_path = browser.runtime.getURL("images/ok-blue.svg");
-				let exclamation_path = browser.runtime.getURL("images/exclamation.svg");
-				await browser.domainProvider.headerAddIcon(
-					response.result.count ? exclamation_path : ok_path,
-					response.result.msg,
-					true
-				);
-				// let items = [];
-				for (let i = 0; i < response.result.count; i++) {
-					let rule = response.result.rules[i];
-					let msg = "#" + rule.rule_id + ": " + rule.pattern;
-					// items.push("#" + rule.rule_id + ": " + rule.pattern);
+			if (typeof browser !== "undefined" &&
+				browser.domainProvider !== undefined)
+			{
+				if (response.success == true) {
+					await browser.domainProvider.headerRowClear();
+					let ok_path = browser.runtime.getURL("images/ok.svg");
+					let ok_blue_path = browser.runtime.getURL("images/ok-blue.svg");
+					let exclamation_path = browser.runtime.getURL("images/exclamation.svg");
 					await browser.domainProvider.headerAddIcon(
-						(rule.enabled == "1") ? exclamation_path : ok_blue_path,
-						msg,
+						response.result.count ? exclamation_path : ok_path,
+						response.result.msg,
+						true
+					);
+					// let items = [];
+					for (let i = 0; i < response.result.count; i++) {
+						let rule = response.result.rules[i];
+						let msg = "#" + rule.rule_id + ": " + rule.pattern;
+						// items.push("#" + rule.rule_id + ": " + rule.pattern);
+						await browser.domainProvider.headerAddIcon(
+							(rule.enabled == "1") ? exclamation_path : ok_blue_path,
+							msg,
+							true
+						);
+					}
+					// await browser.domainProvider.headerAddList(items);
+				} else {
+					await browser.domainProvider.headerRowClear();
+					let error_path = browser.runtime.getURL("images/error.svg");
+					await browser.domainProvider.headerAddIcon(
+						error_path,
+						response.message,
 						true
 					);
 				}
-				// await browser.domainProvider.headerAddList(items);
-			} else {
-				await browser.domainProvider.headerRowClear();
-				let error_path = browser.runtime.getURL("images/error.svg");
-				await browser.domainProvider.headerAddIcon(
-					error_path,
-					response.message,
-					true
-				);
 			}
 		});
 

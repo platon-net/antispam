@@ -1,6 +1,6 @@
 {
 	"manifest_version": 3,
-	"name": "AntispamPlus",
+	"name": "Antispam",
 	"description": "__MSG_description__",
 	"version": "1.16",
 	"author": "Platon Technologies",
@@ -16,28 +16,15 @@
 	},
 	"browser_specific_settings": {
 		"gecko": {
-			"id": "antispamplus@platon.sk",
-			"strict_min_version": "128.0",
-			"strict_max_version": "144.*"
+			"id": "antispam@platon.sk"
 		}
 	},
 	"default_locale": "en",
 	"permissions": ["messagesRead", "messagesMove", "storage", "accountsRead"],
 	"optional_host_permissions": ["http://*/*", "https://*/*"],
-
 	"background": {
 		"scripts": ["functions.js", "background.js"],
 		"type": "module"
-	},
-	"experiment_apis": {
-		"domainProvider": {
-			"schema": "schema.json",
-			"parent": {
-				"scopes": ["addon_parent"],
-				"paths": [["domainProvider"]],
-				"script": "experiment.js"
-			}
-		}
 	},
 	"message_display_action": {
 		"default_title": "__MSG_sendToDB__",
@@ -48,7 +35,7 @@
 		"browser_style": false
 	},
 	"action": {
-		"default_title": "AntispamPlus",
+		"default_title": "Antispam",
 		"default_icon": {
 			"16": "images/icon2.svg?2"
 		},

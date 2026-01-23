@@ -500,8 +500,13 @@ function filterSender(sender) {
 }
 
 function filterDomain(domain) {
-	//filterFulltext("@" + domain);
-	domainProviderSearchDomain2(domain);
+	if (typeof browser !== "undefined" &&
+		browser.domainProvider !== undefined)
+	{
+		domainProviderSearchDomain2(domain);
+	} else {
+		filterFulltext("@" + domain);
+	}
 }
 
 function filterFulltext(text) {
@@ -582,6 +587,11 @@ async function domainProviderSearchDomain(domain) {
 }
 
 async function domainProviderSearchDomain2(domain) {
+	if (typeof browser == "undefined" &&
+		browser.domainProvider == undefined)
+	{
+		return false;
+	}
 	switchForm("messagelist");
 	let progress = document.getElementById("messagelist_progress");
 	let progress_percent = document.getElementById(
