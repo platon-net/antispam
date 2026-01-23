@@ -133,5 +133,8 @@
 	},
 	"messages_found": {
 		"message": "messages found"
+	},
+	"reloadPopup": {
+		"message": "Refresh popup window when changing the displayed email"
 	}
 }
