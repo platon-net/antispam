@@ -38,3 +38,6 @@ div.headertools-icon {
 }
 .headertools-label {
 }
+.headertools-strike {
+	text-decoration: line-through;
+}

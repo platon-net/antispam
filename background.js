@@ -290,9 +290,9 @@ browser.messageDisplay.onMessagesDisplayed.addListener(
 					let ok_blue_path = browser.runtime.getURL("images/ok-blue.svg");
 					let exclamation_path = browser.runtime.getURL("images/exclamation.svg");
 					await browser.domainProvider.headerAddIcon(
-						response.result.count ? exclamation_path : ok_path,
+						(response.result.count_enabled > 0) ? exclamation_path : ok_path,
 						response.result.msg,
-						true
+						true, false
 					);
 					// let items = [];
 					for (let i = 0; i < response.result.count; i++) {
@@ -302,7 +302,7 @@ browser.messageDisplay.onMessagesDisplayed.addListener(
 						await browser.domainProvider.headerAddIcon(
 							(rule.enabled == "1") ? exclamation_path : ok_blue_path,
 							msg,
-							true
+							true, (rule.enabled == "0")
 						);
 					}
 					// await browser.domainProvider.headerAddList(items);
@@ -312,7 +312,7 @@ browser.messageDisplay.onMessagesDisplayed.addListener(
 					await browser.domainProvider.headerAddIcon(
 						error_path,
 						response.message,
-						true
+						true, false
 					);
 				}
 			}

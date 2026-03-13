@@ -89,6 +89,11 @@
 						"name": "as_div",
 						"optional": true,
 						"type": "boolean"
+					},
+					{
+						"name": "strike",
+						"optional": true,
+						"type": "boolean"
 					}
 				]
 			},

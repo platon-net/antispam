@@ -652,7 +652,7 @@ function printInfoMaidata(info) {
 	let div_rules = document.getElementById("rules");
 	div_rules.innerHTML = "";
 	let header = document.createElement("div");
-	header.textContent = "✅ " + info.msg;
+	header.textContent = (info.count_enabled == "0" ? "✅ " : "‼️ ") + info.msg;
 	div_rules.appendChild(header);
 	for (let i = 0; i < info.count; i++) {
 		let rule = info.rules[i];
@@ -661,12 +661,16 @@ function printInfoMaidata(info) {
 		let link = document.createElement("a");
 		link.href = rule.url;
 		link.target = "_blank";
-		link.textContent = "#" + rule.rule_id;
+		let link_icon = (rule.enabled == "0") ? "🔵 " : "🔴 ";
+		link.textContent = link_icon +"#" + rule.rule_id;
 		let desc = document.createElement("span");
 		desc.textContent = rule.pattern;
 		desc.style.paddingLeft = "10px";
 		item.appendChild(link);
 		item.appendChild(desc);
+		if (rule.enabled == "0") {
+			item.style.textDecoration = "line-through";
+		}
 		div_rules.appendChild(item);
 		selectInfoValues(rule.values);
 	}

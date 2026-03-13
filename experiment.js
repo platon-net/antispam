@@ -164,7 +164,7 @@ this.domainProvider = class extends ExtensionCommon.ExtensionAPI {
 					let header_row = getHeaderRow();
 					header_row.innerHTML = "";
 				},
-				async headerAddIcon(icon, label, as_div) {
+				async headerAddIcon(icon, label, as_div, strike) {
 					// console.log("headerAddIcon", icon, label);
 					let header_row = getHeaderRow();
 					let element_icon = header_row.ownerDocument.createElement(as_div ? "div" : "span");
@@ -179,7 +179,7 @@ this.domainProvider = class extends ExtensionCommon.ExtensionAPI {
 					}
 					if (label) {
 						let element_label = header_row.ownerDocument.createElement("span");
-						element_label.setAttribute("class", "headertools-label");
+						element_label.setAttribute("class", strike ? "headertools-label headertools-strike" : "headertools-label");
 						// element_label.textContent = label;
 						element_label.innerHTML = label;
 						element_icon.appendChild(element_label);
