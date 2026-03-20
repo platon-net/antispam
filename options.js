@@ -16,6 +16,10 @@ document.addEventListener('DOMContentLoaded', function() {
 	if (reload_popup == null) reload_popup = '1';
 	document.getElementById('reload_popup').value = reload_popup;
 
+	var popup_focused = localStorage.getItem('popup_focused');
+	if (popup_focused == null) popup_focused = '1';
+	document.getElementById('popup_focused').value = popup_focused;
+
 	/* ----------------------------------------------------
 	 * Button Save onClick
 	 */
@@ -30,6 +34,8 @@ document.addEventListener('DOMContentLoaded', function() {
 		localStorage.setItem('webservice_token', webservice_token);
 		var reload_popup = document.getElementById('reload_popup').value;
 		localStorage.setItem('reload_popup', reload_popup);
+		var popup_focused = document.getElementById('popup_focused').value;
+		localStorage.setItem('popup_focused', popup_focused);
 	});
 
 

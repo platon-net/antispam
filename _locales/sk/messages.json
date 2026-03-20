@@ -136,5 +136,8 @@
 	},
 	"reloadPopup": {
 		"message": "Obnoviť okno pri zmene zobrazeneho e-mailu"
+	},
+	"popupFocused": {
+		"message": "Fokusovat popup okno pri jeho obnoveni"
 	}
 }

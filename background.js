@@ -30,6 +30,15 @@ function isReloadPopupEnabled() {
 	return reload_popup == null || reload_popup.length <= 0 || reload_popup == "1";
 }
 
+function isPopupFocusedEnabled() {
+	let popup_focused = localStorage.getItem("popup_focused"); // default is enabled
+	return (
+		popup_focused == null ||
+		popup_focused.length <= 0 ||
+		popup_focused == "1"
+	);
+}
+
 function appendFormData(formData, data, parentKey = "") {
 	if (
 		data &&
@@ -236,7 +245,9 @@ async function popupReloadBYTabID(tab_id) {
 		);
 		if (win && win.tabs.length > 0) {
 			await browser.tabs.update(win.tabs[0].id, { url: new_url });
-			await browser.windows.update(win.id, { focused: true });
+			await browser.windows.update(win.id, {
+				focused: isPopupFocusedEnabled(),
+			});
 			return true;
 		}
 	} catch (err) {

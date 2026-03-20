@@ -136,5 +136,8 @@
 	},
 	"reloadPopup": {
 		"message": "Refresh popup window when changing the displayed email"
+	},
+	"popupFocused": {
+		"message": "Focus popup window when refreshing it"
 	}
 }
