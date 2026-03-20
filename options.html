@@ -4,30 +4,48 @@
 	<link rel="stylesheet" href="/css/options.css" type="text/css" charset="utf-8" />
 </head>
 <body>
-	__MSG_webserviceEndpointURL__ <br>
-	<input type="text" id="webservice_endpoint_url"><br>
+	<div class="options-wrap">
+		<div class="options-grid">
+			<div class="setting-row">
+				<label class="setting-label" for="webservice_endpoint_url">__MSG_webserviceEndpointURL__</label>
+				<div class="setting-control">
+					<input type="text" id="webservice_endpoint_url">
+				</div>
+			</div>
 
-	<br>
-	__MSG_webserviceToken__ <br>
-	<input type="text" id="webservice_token"><br>
+			<div class="setting-row">
+				<label class="setting-label" for="webservice_token">__MSG_webserviceToken__</label>
+				<div class="setting-control">
+					<input type="text" id="webservice_token">
+				</div>
+			</div>
 
-	<br>
-	__MSG_reloadPopup__ <br>
-	<select id="reload_popup">
-		<option value="1">__MSG_yes__</option>
-		<option value="0">__MSG_no__</option>
-	</select><br>
+			<div class="setting-row">
+				<label class="setting-label" for="reload_popup">__MSG_reloadPopup__</label>
+				<div class="setting-control">
+					<select id="reload_popup">
+						<option value="1">__MSG_yes__</option>
+						<option value="0">__MSG_no__</option>
+					</select>
+				</div>
+			</div>
 
-	<br>
-	__MSG_popupFocused__ <br>
-	<select id="popup_focused">
-		<option value="1">__MSG_yes__</option>
-		<option value="0">__MSG_no__</option>
-	</select><br>
+			<div class="setting-row">
+				<label class="setting-label" for="popup_focused">__MSG_popupFocused__</label>
+				<div class="setting-control">
+					<select id="popup_focused">
+						<option value="1">__MSG_yes__</option>
+						<option value="0">__MSG_no__</option>
+					</select>
+				</div>
+			</div>
+		</div>
 
-	<br>
-	<span id="antispam_label_save" class="hide">__MSG_saveLabel__</span>
-	<button id="antispam_button_save" class="right">__MSG_save__</button>
+		<div class="actions-row">
+			<span id="antispam_label_save" class="hide">__MSG_saveLabel__</span>
+			<button id="antispam_button_save">__MSG_save__</button>
+		</div>
+	</div>
 
 </body>
 <script type="module" src="options.js"></script>
