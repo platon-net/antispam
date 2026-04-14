@@ -48,6 +48,12 @@ table tbody tr td {
 	margin-bottom: 5px;
 	border-bottom: 1px solid black;
 }
+#buttons_quick_move {
+	display: inline-block;
+}
+#buttons_quick_move button {
+	margin-left: 5px;
+}
 #antispam .antispam_icon {
 	width: 20px;
 	height: 20px;
@@ -79,12 +85,23 @@ table tbody tr td {
 #antispam .attribute .value input[type="text"]{
 	width: 95%;
 }
-#antispam #antispam_button_send {
-	float: right;
-	margin-right: 5px;
-}
 #antispam .attribute .value span {
 	font-weight: bold;
+}
+#quick_move_list_wrap {
+	margin-top: 10px;
+}
+#quick_move_list .quick-move-item {
+	display: flex;
+	align-items: center;
+	gap: 10px;
+	margin-bottom: 5px;
+}
+#quick_move_list .quick-move-label {
+	flex: 1;
+}
+.quick-move-empty {
+	font-style: italic;
 }
 .copied {
 	visibility: hidden;

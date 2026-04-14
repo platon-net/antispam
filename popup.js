@@ -11,8 +11,11 @@ browser.tabs
 */
 const url = new URL(window.location.href);
 const tabId = parseInt(url.searchParams.get("tab_id"), 10);
+const quickMoveFoldersStorageKey = "quick_move_folders";
 var messageId = "";
 var message = {};
+var foldersLoaded = false;
+const folderLabels = new Map();
 // console.log("Tab ID:", tabId);
 // console.log("Message ID:", messageId);
 
@@ -78,6 +81,7 @@ messenger.messageDisplay.getDisplayedMessages(tabId).then((message_list) => {
 	messenger.accounts.list(true).then(async (accounts) => {
 		// console.log(accounts);
 		let form_move_folders = document.getElementById("form_move_folders");
+		folderLabels.clear();
 		for (let i = 0; i < accounts.length; i++) {
 			let optgroup = document.createElement("optgroup");
 			optgroup.label = accounts[i].name;
@@ -92,6 +96,11 @@ messenger.messageDisplay.getDisplayedMessages(tabId).then((message_list) => {
 		if (move_folder_id != null) {
 			form_move_folders.value = move_folder_id;
 		}
+		form_move_folders.querySelectorAll("option").forEach((option) => {
+			folderLabels.set(option.value, option.textContent);
+		});
+		foldersLoaded = true;
+		renderQuickMoveUi();
 	});
 	// check infoMaildata
 	browser.runtime.sendMessage(
@@ -137,19 +146,13 @@ document.addEventListener("DOMContentLoaded", function () {
 	document
 		.getElementById("antispam_button_move")
 		.addEventListener("click", function () {
-			if (message == null || message.id == null) {
-				alert(browser.i18n.getMessage("message_not_found"));
-				return;
-			}
-			let folder_id = document.getElementById("form_move_folders").value;
-			if (folder_id == null || folder_id == "") {
-				alert(browser.i18n.getMessage("folder_not_selected"));
-				return;
-			}
-			fnc.localSet("move_folder_id", folder_id);
-			browser.messages.move([message.id], folder_id).then(() => {
-				switchForm("form_info");
-			});
+			moveMessageToFolder(document.getElementById("form_move_folders").value);
+		});
+
+	document
+		.getElementById("button_quick_move_add")
+		.addEventListener("click", function () {
+			addQuickMoveFolder(document.getElementById("form_move_folders").value);
 		});
 
 	/* ----------------------------------------------------
@@ -167,6 +170,8 @@ document.addEventListener("DOMContentLoaded", function () {
 			if (question_callback_last != null) question_callback_last(false);
 			question_callback_last = null;
 		});
+
+	renderQuickMoveUi();
 });
 
 browser.runtime.onMessage.addListener(function (request, sender, sendResponse) {
@@ -188,6 +193,211 @@ function switchForm(form_id) {
 		element.classList.add("hide");
 	});
 	document.getElementById(form_id).classList.remove("hide");
+}
+
+function getQuickMoveFolderIds() {
+	let raw_value = null;
+	try {
+		raw_value = window.localStorage.getItem(quickMoveFoldersStorageKey);
+	} catch (error) {
+		return [];
+	}
+	if (raw_value == null || raw_value === "") {
+		return [];
+	}
+	try {
+		let parsed_value = JSON.parse(raw_value);
+		if (!Array.isArray(parsed_value)) {
+			window.localStorage.removeItem(quickMoveFoldersStorageKey);
+			return [];
+		}
+		let folder_ids = [];
+		for (let i = 0; i < parsed_value.length; i++) {
+			let folder_id = parsed_value[i];
+			if (folder_id == null || folder_id === "") {
+				continue;
+			}
+			folder_id = String(folder_id);
+			if (!folder_ids.includes(folder_id)) {
+				folder_ids.push(folder_id);
+			}
+		}
+		return folder_ids;
+	} catch (error) {
+		window.localStorage.removeItem(quickMoveFoldersStorageKey);
+		return [];
+	}
+}
+
+function saveQuickMoveFolderIds(folder_ids) {
+	let unique_folder_ids = [];
+	for (let i = 0; i < folder_ids.length; i++) {
+		let folder_id = folder_ids[i];
+		if (folder_id == null || folder_id === "") {
+			continue;
+		}
+		folder_id = String(folder_id);
+		if (!unique_folder_ids.includes(folder_id)) {
+			unique_folder_ids.push(folder_id);
+		}
+	}
+	try {
+		window.localStorage.setItem(
+			quickMoveFoldersStorageKey,
+			JSON.stringify(unique_folder_ids)
+		);
+	} catch (error) {
+		return false;
+	}
+	return true;
+}
+
+function getFolderLabel(folder_id) {
+	if (folderLabels.has(folder_id)) {
+		return folderLabels.get(folder_id);
+	}
+	let form_move_folders = document.getElementById("form_move_folders");
+	if (form_move_folders != null) {
+		for (let i = 0; i < form_move_folders.options.length; i++) {
+			let option = form_move_folders.options[i];
+			if (option.value === folder_id) {
+				return option.textContent;
+			}
+		}
+	}
+	return folder_id;
+}
+
+function folderExists(folder_id) {
+	if (!foldersLoaded) {
+		return true;
+	}
+	return folderLabels.has(folder_id);
+}
+
+function renderQuickMoveButtons() {
+	let container = document.getElementById("buttons_quick_move");
+	if (container == null) {
+		return;
+	}
+	container.innerHTML = "";
+	let folder_ids = getQuickMoveFolderIds();
+	for (let i = 0; i < folder_ids.length; i++) {
+		let folder_id = folder_ids[i];
+		let button = document.createElement("button");
+		button.type = "button";
+		button.textContent = getFolderLabel(folder_id);
+		if (!folderExists(folder_id)) {
+			button.textContent +=
+				" " + browser.i18n.getMessage("quick_move_missing_suffix");
+		}
+		button.addEventListener("click", function () {
+			moveMessageToFolder(folder_id);
+		});
+		container.appendChild(button);
+	}
+}
+
+function renderQuickMoveList() {
+	let container = document.getElementById("quick_move_list");
+	if (container == null) {
+		return;
+	}
+	container.innerHTML = "";
+	let folder_ids = getQuickMoveFolderIds();
+	if (folder_ids.length === 0) {
+		let empty = document.createElement("div");
+		empty.className = "quick-move-empty";
+		empty.textContent = browser.i18n.getMessage("quick_move_empty");
+		container.appendChild(empty);
+		return;
+	}
+	for (let i = 0; i < folder_ids.length; i++) {
+		let folder_id = folder_ids[i];
+		let item = document.createElement("div");
+		item.className = "quick-move-item";
+
+		let label = document.createElement("span");
+		label.className = "quick-move-label";
+		label.textContent = getFolderLabel(folder_id);
+		if (!folderExists(folder_id)) {
+			label.textContent +=
+				" " + browser.i18n.getMessage("quick_move_missing_suffix");
+		}
+
+		let button = document.createElement("button");
+		button.type = "button";
+		button.textContent = browser.i18n.getMessage("quick_move_remove");
+		button.addEventListener("click", function () {
+			removeQuickMoveFolder(folder_id);
+		});
+
+		item.appendChild(button);
+		item.appendChild(label);
+		container.appendChild(item);
+	}
+}
+
+function renderQuickMoveUi() {
+	renderQuickMoveButtons();
+	renderQuickMoveList();
+}
+
+function addQuickMoveFolder(folder_id) {
+	if (folder_id == null || folder_id === "") {
+		alert(browser.i18n.getMessage("folder_not_selected"));
+		return false;
+	}
+	if (!folderExists(folder_id)) {
+		alert(browser.i18n.getMessage("quick_move_folder_missing"));
+		return false;
+	}
+	let folder_ids = getQuickMoveFolderIds();
+	if (!folder_ids.includes(folder_id)) {
+		folder_ids.push(folder_id);
+	}
+	if (!saveQuickMoveFolderIds(folder_ids)) {
+		return false;
+	}
+	renderQuickMoveUi();
+	return true;
+}
+
+function removeQuickMoveFolder(folder_id) {
+	let folder_ids = getQuickMoveFolderIds().filter((item) => item !== folder_id);
+	if (!saveQuickMoveFolderIds(folder_ids)) {
+		return false;
+	}
+	renderQuickMoveUi();
+	return true;
+}
+
+function moveMessageToFolder(folder_id) {
+	if (message == null || message.id == null) {
+		alert(browser.i18n.getMessage("message_not_found"));
+		return Promise.resolve(false);
+	}
+	if (folder_id == null || folder_id === "") {
+		alert(browser.i18n.getMessage("folder_not_selected"));
+		return Promise.resolve(false);
+	}
+	if (!folderExists(folder_id)) {
+		alert(browser.i18n.getMessage("quick_move_folder_missing"));
+		switchForm("form_move");
+		return Promise.resolve(false);
+	}
+	let form_move_folders = document.getElementById("form_move_folders");
+	if (form_move_folders != null) {
+		form_move_folders.value = folder_id;
+	}
+	fnc.localSet("move_folder_id", folder_id);
+	return browser.messages.move([message.id], folder_id).then(() => {
+		switchForm("form_info");
+		return true;
+	}).catch(() => {
+		alert(browser.i18n.getMessage("move_message_failed"));
+		return false;
+	});
 }
 
 function webserviceResponseHandler(response, output_object) {

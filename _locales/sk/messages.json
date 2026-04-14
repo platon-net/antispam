@@ -134,6 +134,33 @@
 	"messages_found": {
 		"message": "najdených e-mailov"
 	},
+	"message_not_found": {
+		"message": "Spr\u00e1va sa nena\u0161la."
+	},
+	"folder_not_selected": {
+		"message": "Nie je vybran\u00fd prie\u010dinok."
+	},
+	"quick_move_add": {
+		"message": "Prida\u0165 ako r\u00fdchlu vo\u013ebu"
+	},
+	"quick_move_header": {
+		"message": "R\u00fdchle vo\u013eby"
+	},
+	"quick_move_empty": {
+		"message": "\u017diadne r\u00fdchle vo\u013eby."
+	},
+	"quick_move_remove": {
+		"message": "Odobra\u0165"
+	},
+	"quick_move_missing_suffix": {
+		"message": "(ch\u00fdba)"
+	},
+	"quick_move_folder_missing": {
+		"message": "Vybran\u00fd prie\u010dinok u\u017e neexistuje."
+	},
+	"move_message_failed": {
+		"message": "Presun spr\u00e1vy zlyhal."
+	},
 	"reloadPopup": {
 		"message": "Obnoviť okno pri zmene zobrazeneho e-mailu"
 	},

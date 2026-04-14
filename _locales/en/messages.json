@@ -134,6 +134,33 @@
 	"messages_found": {
 		"message": "messages found"
 	},
+	"message_not_found": {
+		"message": "Message not found."
+	},
+	"folder_not_selected": {
+		"message": "No folder selected."
+	},
+	"quick_move_add": {
+		"message": "Add as quick choice"
+	},
+	"quick_move_header": {
+		"message": "Quick choices"
+	},
+	"quick_move_empty": {
+		"message": "No quick choices."
+	},
+	"quick_move_remove": {
+		"message": "Remove"
+	},
+	"quick_move_missing_suffix": {
+		"message": "(missing)"
+	},
+	"quick_move_folder_missing": {
+		"message": "The selected folder no longer exists."
+	},
+	"move_message_failed": {
+		"message": "Moving the message failed."
+	},
 	"reloadPopup": {
 		"message": "Refresh popup window when changing the displayed email"
 	},
