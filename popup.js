@@ -52,12 +52,6 @@ messenger.messageDisplay.getDisplayedMessages(tabId).then((message_list) => {
 			.getElementById("info_sender_subdomains")
 			.appendChild(subdomainLine(subdomains[i]));
 	}
-	// Form Summary
-	document.getElementById("antispam_recipients").value =
-		message.recipients.join(", ");
-	document.getElementById("antispam_sender").value = sender_email;
-	document.getElementById("antispam_sender_domain").value = sender_domain;
-	document.getElementById("antispam_subject").value = message.subject;
 	messenger.messages.getFull(message.id).then((message_part) => {
 		// console.log(message_part);
 		let replyto = message_part.headers["reply-to"];
@@ -127,12 +121,6 @@ document.addEventListener("DOMContentLoaded", function () {
 		});
 
 	document
-		.getElementById("button_form_summary_show")
-		.addEventListener("click", function () {
-			switchForm("form_summary");
-		});
-
-	document
 		.getElementById("button_form_move_show")
 		.addEventListener("click", function () {
 			switchForm("form_move");
@@ -142,20 +130,6 @@ document.addEventListener("DOMContentLoaded", function () {
 	 * Buttons Info
 	 */
 
-
-	/* ----------------------------------------------------
-	 * Button Send onClick
-	 */
-	document
-		.getElementById("antispam_button_send")
-		.addEventListener("click", function () {
-			var maildata = {
-				recipients: document.getElementById("antispam_recipients").value,
-				sender: document.getElementById("antispam_sender").value,
-				subject: document.getElementById("antispam_subject").value,
-			};
-			antispamAddMaildata(maildata);
-		});
 
 	/* ----------------------------------------------------
 	 * Buttons Move
@@ -232,16 +206,6 @@ function webserviceResponseHandler(response, output_object) {
 	} else {
 		output_object.innerHTML = result_html;
 	}
-}
-
-function antispamAddMaildata(maildata) {
-	switchForm("webservice");
-	document.getElementById("webservice").innerText =
-		browser.i18n.getMessage("loading");
-	browser.runtime.sendMessage(
-		{ name: "antispamAddMaildata", maildata: maildata },
-		webserviceResponseHandler
-	);
 }
 
 function antispamEmailrule(type, pattern, output_object) {
