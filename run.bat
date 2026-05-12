@@ -21,10 +21,11 @@ copy manifest-basic.json manifest.json
 for /f "delims=" %%a in ('findstr "\"version\"" manifest.json') do @set versionrow=%%a
 set version=%versionrow:~13,4%
 tar -a -c -f build\thunderbird\Antispam.%version%.zip ^
-	--exclude "*.bat" --exclude "*.psd" --exclude "*.eps" ^
-	--exclude ".git" --exclude "build" --exclude "test" ^
+	--exclude "*.bat" --exclude "*.psd" --exclude "*.eps" --exclude "*.md" ^
+	--exclude ".git" --exclude ".gitmodules" --exclude "build" --exclude "test" ^
 	--exclude "manifest-basic.json" --exclude "manifest-plus.json" ^
 	--exclude "experiment.js" --exclude "css/experiment.css" --exclude "schema.json" ^
+	--exclude "lib/openapi-js-simple/tests" ^
 	*
 move build\thunderbird\Antispam.%version%.zip build\thunderbird\Antispam.%version%.xpi
 
@@ -34,9 +35,10 @@ copy manifest-plus.json manifest.json
 for /f "delims=" %%a in ('findstr "\"version\"" manifest.json') do @set versionrow=%%a
 set version=%versionrow:~13,4%
 tar -a -c -f build\thunderbird\AntispamPlus.%version%.zip ^
-	--exclude "*.bat" --exclude "*.psd" --exclude "*.eps" ^
-	--exclude ".git" --exclude "build" --exclude "test" ^
+	--exclude "*.bat" --exclude "*.psd" --exclude "*.eps" --exclude "*.md" ^
+	--exclude ".git" --exclude ".gitmodules" --exclude "build" --exclude "test" ^
 	--exclude "manifest-basic.json" --exclude "manifest-plus.json" ^
+	--exclude "lib/openapi-js-simple/tests" ^
 	*
 move build\thunderbird\AntispamPlus.%version%.zip build\thunderbird\AntispamPlus.%version%.xpi
 

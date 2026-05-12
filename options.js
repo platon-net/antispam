@@ -4,6 +4,14 @@ document.addEventListener('DOMContentLoaded', function() {
 	/* ----------------------------------------------------
 	 * Initialize
 	 */
+	var api_endpoint_url = localStorage.getItem('api_endpoint_url');
+	if (api_endpoint_url == null) api_endpoint_url = '';
+	document.getElementById('api_endpoint_url').value = api_endpoint_url;
+
+	var api_token = localStorage.getItem('api_token');
+	if (api_token == null) api_token = '';
+	document.getElementById('api_token').value = api_token;
+
 	var webservice_endpoint_url = localStorage.getItem('webservice_endpoint_url');
 	if (webservice_endpoint_url == null) webservice_endpoint_url = '';
 	document.getElementById('webservice_endpoint_url').value = webservice_endpoint_url;
@@ -11,6 +19,10 @@ document.addEventListener('DOMContentLoaded', function() {
 	var webservice_token = localStorage.getItem('webservice_token');
 	if (webservice_token == null) webservice_token = '';
 	document.getElementById('webservice_token').value = webservice_token;
+
+	var backend_type = localStorage.getItem('backend_type');
+	if (backend_type == null) backend_type = 'webservice';
+	document.getElementById('backend_type').value = backend_type;
 
 	var reload_popup = localStorage.getItem('reload_popup');
 	if (reload_popup == null) reload_popup = '1';
@@ -24,6 +36,15 @@ document.addEventListener('DOMContentLoaded', function() {
 	 * Button Save onClick
 	 */
 	document.getElementById('antispam_button_save').addEventListener('click', function() {
+		var api_endpoint_url = document.getElementById('api_endpoint_url').value;
+		fnc.requestSitePermission(api_endpoint_url, graned => {
+			if (graned) {
+				apiEndpointSave(api_endpoint_url);
+			}
+		});
+		var api_token = document.getElementById('api_token').value;
+		localStorage.setItem('api_token', api_token);
+
 		var webservice_endpoint_url = document.getElementById('webservice_endpoint_url').value;
 		fnc.requestSitePermission(webservice_endpoint_url, graned => {
 			if (graned) {
@@ -32,14 +53,25 @@ document.addEventListener('DOMContentLoaded', function() {
 		});
 		var webservice_token = document.getElementById('webservice_token').value;
 		localStorage.setItem('webservice_token', webservice_token);
+
+		var backend_type = document.getElementById('backend_type').value;
+		localStorage.setItem('backend_type', backend_type);
+
 		var reload_popup = document.getElementById('reload_popup').value;
 		localStorage.setItem('reload_popup', reload_popup);
+
 		var popup_focused = document.getElementById('popup_focused').value;
 		localStorage.setItem('popup_focused', popup_focused);
 	});
 
 
 });
+
+function apiEndpointSave(api_endpoint_url) {
+	localStorage.setItem('api_endpoint_url', api_endpoint_url);
+	document.getElementById('antispam_label_save').classList.remove('hide');
+	setTimeout(function(){ document.getElementById('antispam_label_save').classList.add('hide'); }, 3000);
+}
 
 function webserviceEndpointSave(webservice_endpoint_url) {
 	localStorage.setItem('webservice_endpoint_url', webservice_endpoint_url);

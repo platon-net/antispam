@@ -68,6 +68,30 @@
 	"webserviceToken": {
 		"message": "Token for webservice"
 	},
+	"apiSettings": {
+		"message": "API Settings"
+	},
+	"apiEndpointURL": {
+		"message": "API URL"
+	},
+	"apiToken": {
+		"message": "API Token"
+	},
+	"webserviceSettings": {
+		"message": "Webservice Settings"
+	},
+	"generalSettings": {
+		"message": "General Settings"
+	},
+	"backendType": {
+		"message": "Backend Type"
+	},
+	"useApi": {
+		"message": "Use API"
+	},
+	"useWebservice": {
+		"message": "Use Webservice"
+	},
 	"save": {
 		"message": "Save"
 	},

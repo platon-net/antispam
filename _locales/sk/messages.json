@@ -1,15 +1,15 @@
-{
+﻿{
 	"name": {
 		"message": "Antispam"
 	},
 	"description": {
-		"message": "Odosielanie e-mailu do Antispam databazy"
+		"message": "Odosielanie e-mailu do databázy Antispam"
 	},
 	"sendToDB": {
-		"message": "Odoslať do Antispam databázy"
+		"message": "Odoslať do databázy Antispam"
 	},
 	"header": {
-		"message": "Odoslať do Antispam databázy"
+		"message": "Odoslať do databázy Antispam"
 	},
 	"form_info_show": {
 		"message": "Informácie"
@@ -68,6 +68,30 @@
 	"webserviceToken": {
 		"message": "Token webovej služby"
 	},
+	"apiSettings": {
+		"message": "Nastavenia API"
+	},
+	"apiEndpointURL": {
+		"message": "API URL"
+	},
+	"apiToken": {
+		"message": "API token"
+	},
+	"webserviceSettings": {
+		"message": "Nastavenia webovej služby"
+	},
+	"generalSettings": {
+		"message": "Všeobecné nastavenia"
+	},
+	"backendType": {
+		"message": "Typ backendu"
+	},
+	"useApi": {
+		"message": "Použiť API"
+	},
+	"useWebservice": {
+		"message": "Použiť webovú službu"
+	},
 	"save": {
 		"message": "Uložiť"
 	},
@@ -75,19 +99,19 @@
 		"message": "Nastavenia boli uložené."
 	},
 	"close": {
-		"message": "Zatvor"
+		"message": "Zatvoriť"
 	},
 	"webservceURLnotSet": {
-		"message": "URL pre webovu službu nie je nastavená."
+		"message": "URL pre webovú službu nie je nastavená."
 	},
 	"headerAnalyze": {
-		"message": "Analýza priečinku"
+		"message": "Analýza priečinka"
 	},
 	"openAnalyze": {
 		"message": "Analyzovať priečinok"
 	},
 	"runAnalyze": {
-		"message": "Spustiť analyzu"
+		"message": "Spustiť analýzu"
 	},
 	"ID": {
 		"message": "ID"
@@ -105,7 +129,7 @@
 		"message": "Načítava sa ..."
 	},
 	"search_failed": {
-		"message": "Hlľadanie zlyhalo."
+		"message": "Hľadanie zlyhalo."
 	},
 	"search_empty": {
 		"message": "Nenašla sa žiadna informácia."
@@ -117,7 +141,7 @@
 		"message": "Vytvoriť pravidlo"
 	},
 	"yes": {
-		"message": "Áno"
+		"message": "Áno"
 	},
 	"no": {
 		"message": "Nie"
@@ -132,39 +156,39 @@
 		"message": "Presunúť"
 	},
 	"messages_found": {
-		"message": "najdených e-mailov"
+		"message": "nájdených e-mailov"
 	},
 	"message_not_found": {
-		"message": "Spr\u00e1va sa nena\u0161la."
+		"message": "Správa sa nenašla."
 	},
 	"folder_not_selected": {
-		"message": "Nie je vybran\u00fd prie\u010dinok."
+		"message": "Nie je vybraný priečinok."
 	},
 	"quick_move_add": {
-		"message": "Prida\u0165 ako r\u00fdchlu vo\u013ebu"
+		"message": "Pridať ako rýchlu voľbu"
 	},
 	"quick_move_header": {
-		"message": "R\u00fdchle vo\u013eby"
+		"message": "Rýchle voľby"
 	},
 	"quick_move_empty": {
-		"message": "\u017diadne r\u00fdchle vo\u013eby."
+		"message": "Žiadne rýchle voľby."
 	},
 	"quick_move_remove": {
-		"message": "Odobra\u0165"
+		"message": "Odobrať"
 	},
 	"quick_move_missing_suffix": {
-		"message": "(ch\u00fdba)"
+		"message": "(chýba)"
 	},
 	"quick_move_folder_missing": {
-		"message": "Vybran\u00fd prie\u010dinok u\u017e neexistuje."
+		"message": "Vybraný priečinok už neexistuje."
 	},
 	"move_message_failed": {
-		"message": "Presun spr\u00e1vy zlyhal."
+		"message": "Presun správy zlyhal."
 	},
 	"reloadPopup": {
-		"message": "Obnoviť okno pri zmene zobrazeneho e-mailu"
+		"message": "Obnoviť okno pri zmene zobrazeného e-mailu"
 	},
 	"popupFocused": {
-		"message": "Fokusovat popup okno pri jeho obnoveni"
+		"message": "Fokusovať popup okno pri jeho obnovení"
 	}
 }

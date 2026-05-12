@@ -5,38 +5,77 @@
 </head>
 <body>
 	<div class="options-wrap">
-		<div class="options-grid">
-			<div class="setting-row">
-				<label class="setting-label" for="webservice_endpoint_url">__MSG_webserviceEndpointURL__</label>
-				<div class="setting-control">
-					<input type="text" id="webservice_endpoint_url">
+		<div class="settings-section">
+			<h2>__MSG_apiSettings__</h2>
+			<div class="options-grid">
+				<div class="setting-row">
+					<label class="setting-label" for="api_endpoint_url">__MSG_apiEndpointURL__</label>
+					<div class="setting-control">
+						<input type="text" id="api_endpoint_url">
+					</div>
+				</div>
+
+				<div class="setting-row">
+					<label class="setting-label" for="api_token">__MSG_apiToken__</label>
+					<div class="setting-control">
+						<input type="text" id="api_token">
+					</div>
 				</div>
 			</div>
+		</div>
+		<hr>
 
-			<div class="setting-row">
-				<label class="setting-label" for="webservice_token">__MSG_webserviceToken__</label>
-				<div class="setting-control">
-					<input type="text" id="webservice_token">
+		<div class="settings-section">
+			<h2>__MSG_webserviceSettings__</h2>
+			<div class="options-grid">
+				<div class="setting-row">
+					<label class="setting-label" for="webservice_endpoint_url">__MSG_webserviceEndpointURL__</label>
+					<div class="setting-control">
+						<input type="text" id="webservice_endpoint_url">
+					</div>
+				</div>
+
+				<div class="setting-row">
+					<label class="setting-label" for="webservice_token">__MSG_webserviceToken__</label>
+					<div class="setting-control">
+						<input type="text" id="webservice_token">
+					</div>
 				</div>
 			</div>
+		</div>
+		<hr>
 
-			<div class="setting-row">
-				<label class="setting-label" for="reload_popup">__MSG_reloadPopup__</label>
-				<div class="setting-control">
-					<select id="reload_popup">
-						<option value="1">__MSG_yes__</option>
-						<option value="0">__MSG_no__</option>
-					</select>
+		<div class="settings-section">
+			<h2>__MSG_generalSettings__</h2>
+			<div class="options-grid">
+				<div class="setting-row">
+					<label class="setting-label" for="backend_type">__MSG_backendType__</label>
+					<div class="setting-control">
+						<select id="backend_type">
+							<option value="api">__MSG_useApi__</option>
+							<option value="webservice">__MSG_useWebservice__</option>
+						</select>
+					</div>
 				</div>
-			</div>
 
-			<div class="setting-row">
-				<label class="setting-label" for="popup_focused">__MSG_popupFocused__</label>
-				<div class="setting-control">
-					<select id="popup_focused">
-						<option value="1">__MSG_yes__</option>
-						<option value="0">__MSG_no__</option>
-					</select>
+				<div class="setting-row">
+					<label class="setting-label" for="reload_popup">__MSG_reloadPopup__</label>
+					<div class="setting-control">
+						<select id="reload_popup">
+							<option value="1">__MSG_yes__</option>
+							<option value="0">__MSG_no__</option>
+						</select>
+					</div>
+				</div>
+
+				<div class="setting-row">
+					<label class="setting-label" for="popup_focused">__MSG_popupFocused__</label>
+					<div class="setting-control">
+						<select id="popup_focused">
+							<option value="1">__MSG_yes__</option>
+							<option value="0">__MSG_no__</option>
+						</select>
+					</div>
 				</div>
 			</div>
 		</div>

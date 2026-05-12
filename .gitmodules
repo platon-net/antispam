@@ -1,0 +1,3 @@
+[submodule "lib/openapi-js-simple"]
+	path = lib/openapi-js-simple
+	url = https://github.com/platon-net/openapi-js-simple.git

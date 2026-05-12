@@ -8,6 +8,12 @@
 // });
 
 import * as fnc from "./functions.js";
+import API from './lib/openapi-js-simple/src/API.js';
+
+function backendType() {
+	return localStorage.getItem("backend_type");
+}
+
 
 function webserviceEndpoint() {
 	var endpoint = localStorage.getItem("webservice_endpoint_url");
@@ -23,6 +29,22 @@ function isSetWebserviceEndpoint() {
 
 function webserviceToken() {
 	return localStorage.getItem("webservice_token");
+}
+
+function apiEndpoint() {
+	var endpoint = localStorage.getItem("api_endpoint_url");
+	if (endpoint == null || endpoint == undefined) {
+		return "";
+	}
+	return endpoint;
+}
+
+function isSetApiEndpoint() {
+	return apiEndpoint().length > 0;
+}
+
+function apiToken() {
+	return localStorage.getItem("api_token");
 }
 
 function isReloadPopupEnabled() {
@@ -120,37 +142,119 @@ function webserviceResponseProcess(response) {
 	return result;
 }
 
+function apiClient() {
+	if (!isSetApiEndpoint()) {
+		return false;
+	}
+	let apiClient = new API(apiEndpoint());
+	if (apiToken().length > 0) {
+		apiClient.setBearerToken(apiToken());
+	}
+	return apiClient;
+}
+
+function apiResponseProcess(response) {
+	var result = {};
+	if (response.status == "OK") {
+		result = { success: true, result: response.data };
+	} else {
+		console.error(response.msg);
+		result = { success: false, message: response.msg };
+	}
+	return result;
+}
+
 function antispamAddMaildata(maildata, callback) {
-	webservice(
-		"antispam",
-		{ action: "addMaildata", maildata: maildata },
-		function (response) {
-			var result = webserviceResponseProcess(response);
-			if (callback != null) callback(result);
+	let backend_type = backendType();
+	if (backend_type == "api") {
+		let api = apiClient();
+		if (api == false) {
+			if (callback != null) callback({ status: "ERROR", msg: "API not set" });
+			return false;
 		}
-	);
+		api
+			.post("/antispam/maildata", { maildata: maildata })
+			.then((response) => {
+				let result = apiResponseProcess(response);
+				if (callback != null) callback(result);
+			})
+			.catch((error) => {
+				console.error(error);
+				if (callback != null) callback({success : false, message: error });
+			});
+	}
+	if (backend_type == "webservice") {
+		webservice(
+			"antispam",
+			{ action: "addMaildata", maildata: maildata },
+			function (response) {
+				var result = webserviceResponseProcess(response);
+				if (callback != null) callback(result);
+			}
+		);
+	}
 }
 
 function antispamCheckMaildata(maildata, callback) {
-	webservice(
-		"antispam",
-		{ action: "checkMaildata", maildata: maildata },
-		function (response) {
-			var result = webserviceResponseProcess(response);
-			if (callback != null) callback(result);
+	let backend_type = backendType();
+	if (backend_type == "api") {
+		let api = apiClient();
+		if (api == false) {
+			if (callback != null) callback({ status: "ERROR", msg: "API not set" });
+			return false;
 		}
-	);
+		api
+			.post("/antispam/maildata/check", { maildata: maildata })
+			.then((response) => {
+				let result = apiResponseProcess(response);
+				if (callback != null) callback(result);
+			})
+			.catch((error) => {
+				console.error(error);
+				if (callback != null) callback({success : false, message: error });
+			});
+	}
+	if (backend_type == "webservice") {
+		webservice(
+			"antispam",
+			{ action: "checkMaildata", maildata: maildata },
+			function (response) {
+				var result = webserviceResponseProcess(response);
+				if (callback != null) callback(result);
+			}
+		);
+	}
 }
 
 function antispamEmailrule(type, pattern, callback) {
-	webservice(
-		"antispam",
-		{ action: "emailrule", type: type, pattern: pattern },
-		function (response) {
-			var result = webserviceResponseProcess(response);
-			if (callback != null) callback(result);
+	let backend_type = backendType();
+	if (backend_type == "api") {
+		let api = apiClient();
+		if (api == false) {
+			if (callback != null) callback({ status: "ERROR", msg: "API not set" });
+			return false;
 		}
-	);
+		api
+			.post("/antispam/rules", { type: type, pattern: pattern })
+			.then((response) => {
+				let result = apiResponseProcess(response);
+				if (callback != null) callback(result);
+			})
+			.catch((error) => {
+				console.error(error);
+				if (callback != null) callback({success : false, message: error });
+			});
+	}
+	if (backend_type == "webservice") {
+		webservice(
+			"antispam",
+			{ action: "emailrule", type: type, pattern: pattern },
+			function (response) {
+				var result = webserviceResponseProcess(response);
+				if (callback != null) callback(result);
+			}
+		);
+	}
 }
 
 async function folderAnalyze(params, callback) {
