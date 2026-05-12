@@ -88,7 +88,25 @@ export function tableAdd(table_id, data) {
 }
 
 export function requestSitePermission(url, callback) {
-	const origin = url.replace(/\/?\*?$/, "/*");
+	if (url == null || url.trim() == "") {
+		if (callback != null) {
+			callback(false);
+		}
+		return;
+	}
+
+	let parsedUrl;
+	try {
+		parsedUrl = new URL(url);
+	} catch (error) {
+		console.error(error);
+		if (callback != null) {
+			callback(false);
+		}
+		return;
+	}
+
+	const origin = parsedUrl.origin + "/*";
 	browser.permissions
 		.request({
 			origins: [origin],
