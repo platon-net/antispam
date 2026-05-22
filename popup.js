@@ -104,7 +104,7 @@ messenger.messageDisplay.getDisplayedMessages(tabId).then((message_list) => {
 	});
 	// check infoMaildata
 	browser.runtime.sendMessage(
-		{ name: "cacheInfoMaildata", messageId: messageId },
+		{ name: "cacheInfoMaildata", messageId: messageId, tabId: tabId },
 		(response) => {
 			// console.log("cacheInfoMaildata", response);
 			if (response != null) {

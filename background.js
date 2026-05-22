@@ -10,6 +10,8 @@
 import * as fnc from "./functions.js";
 import API from './lib/openapi-js-simple/src/API.js';
 
+const infoMaildataLoading = new Map();
+
 function backendType() {
 	return localStorage.getItem("backend_type");
 }
@@ -257,6 +259,121 @@ function antispamEmailrule(type, pattern, callback) {
 	}
 }
 
+function antispamCheckMaildataAsync(maildata) {
+	return new Promise((resolve) => {
+		antispamCheckMaildata(maildata, function (response) {
+			resolve(response);
+		});
+	});
+}
+
+async function renderInfoMaildataHeader(response) {
+	if (typeof browser === "undefined" ||
+		browser.domainProvider === undefined)
+	{
+		return;
+	}
+	if (response.success == true) {
+		await browser.domainProvider.headerRowClear();
+		let ok_path = browser.runtime.getURL("images/ok.svg");
+		let ok_blue_path = browser.runtime.getURL("images/ok-blue.svg");
+		let exclamation_path = browser.runtime.getURL("images/exclamation.svg");
+		await browser.domainProvider.headerAddIcon(
+			(response.result.count_enabled > 0) ? exclamation_path : ok_path,
+			response.result.msg,
+			true, false
+		);
+		// let items = [];
+		for (let i = 0; i < response.result.count; i++) {
+			let rule = response.result.rules[i];
+			let msg = "#" + rule.rule_id + ": " + rule.pattern;
+			// items.push("#" + rule.rule_id + ": " + rule.pattern);
+			await browser.domainProvider.headerAddIcon(
+				(rule.enabled == "1") ? exclamation_path : ok_blue_path,
+				msg,
+				true, (rule.enabled == "0")
+			);
+		}
+		// await browser.domainProvider.headerAddList(items);
+	} else {
+		await browser.domainProvider.headerRowClear();
+		let error_path = browser.runtime.getURL("images/error.svg");
+		await browser.domainProvider.headerAddIcon(
+			error_path,
+			response.message,
+			true, false
+		);
+	}
+}
+
+async function loadInfoMaildata(message, notify_popup, render_header) {
+	let message_id = fnc.simpleHash(message.headerMessageId);
+	let response = await fnc.sessionGet("infoMaildata_" + message_id);
+	if (response == null) {
+		let loading = infoMaildataLoading.get(message_id);
+		if (loading == null) {
+			loading = (async () => {
+				let maildata = await fnc.extractMessageInfo(message);
+				// console.log("maildata", maildata);
+				let info = await antispamCheckMaildataAsync(maildata);
+				await fnc.sessionSet("infoMaildata_" + message_id, info);
+				return info;
+			})();
+			infoMaildataLoading.set(message_id, loading);
+		}
+		try {
+			response = await loading;
+		} finally {
+			infoMaildataLoading.delete(message_id);
+		}
+	}
+	if (notify_popup) {
+		browser.runtime.sendMessage({
+			name: "infoMaildata",
+			message_id: message_id,
+			info: response,
+		});
+	}
+	if (render_header) {
+		await renderInfoMaildataHeader(response);
+	}
+	return response;
+}
+
+async function getDisplayedMessageByRequest(request) {
+	if (request.tabId == null) {
+		return null;
+	}
+	let displayedMessages = await browser.messageDisplay.getDisplayedMessages(
+		request.tabId
+	);
+	if (displayedMessages == null ||
+		displayedMessages.messages == null ||
+		displayedMessages.messages.length <= 0)
+	{
+		return null;
+	}
+	for (let i = 0; i < displayedMessages.messages.length; i++) {
+		let message = displayedMessages.messages[i];
+		if (fnc.simpleHash(message.headerMessageId) == request.messageId) {
+			return message;
+		}
+	}
+	return null;
+}
+
+async function cacheInfoMaildata(request) {
+	let info = await fnc.sessionGet("infoMaildata_" + request.messageId);
+	if (info != null) {
+		return info;
+	}
+	let message = await getDisplayedMessageByRequest(request);
+	if (message == null) {
+		return null;
+	}
+	return loadInfoMaildata(message, false, false);
+}
+
 async function folderAnalyze(params, callback) {
 	// console.log("folderAnalyze");
 	let result = { status: "OK" };
@@ -309,8 +426,12 @@ browser.runtime.onMessage.addListener(function (request, sender, sendResponse) {
 			browser.windows.openDefaultBrowser(request.url);
 			break;
 		case "cacheInfoMaildata":
-			let info = fnc.sessionGet("infoMaildata_" + request.messageId);
-			sendResponse(info);
+			cacheInfoMaildata(request).then((info) => {
+				sendResponse(info);
+			}).catch((error) => {
+				console.error(error);
+				sendResponse(null);
+			});
 			break;
 		default:
 			sendResponse({ msg: "Unknown request" });
@@ -391,53 +512,8 @@ browser.messageDisplay.onMessagesDisplayed.addListener(
 
 		var message = displayedMessages.messages[0];
 		// console.log(message);
-		let message_id = fnc.simpleHash(message.headerMessageId);
-		let maildata = await fnc.extractMessageInfo(message);
-		// console.log("maildata", maildata);
-
-		antispamCheckMaildata(maildata, async (response) => {
-			// console.log(response);
-			fnc.sessionSet("infoMaildata_" + message_id, response);
-			browser.runtime.sendMessage({
-				name: "infoMaildata",
-				message_id: message_id,
-				info: response,
-			});
-			if (typeof browser !== "undefined" &&
-				browser.domainProvider !== undefined)
-			{
-				if (response.success == true) {
-					await browser.domainProvider.headerRowClear();
-					let ok_path = browser.runtime.getURL("images/ok.svg");
-					let ok_blue_path = browser.runtime.getURL("images/ok-blue.svg");
-					let exclamation_path = browser.runtime.getURL("images/exclamation.svg");
-					await browser.domainProvider.headerAddIcon(
-						(response.result.count_enabled > 0) ? exclamation_path : ok_path,
-						response.result.msg,
-						true, false
-					);
-					// let items = [];
-					for (let i = 0; i < response.result.count; i++) {
-						let rule = response.result.rules[i];
-						let msg = "#" + rule.rule_id + ": " + rule.pattern;
-						// items.push("#" + rule.rule_id + ": " + rule.pattern);
-						await browser.domainProvider.headerAddIcon(
-							(rule.enabled == "1") ? exclamation_path : ok_blue_path,
-							msg,
-							true, (rule.enabled == "0")
-						);
-					}
-					// await browser.domainProvider.headerAddList(items);
-				} else {
-					await browser.domainProvider.headerRowClear();
-					let error_path = browser.runtime.getURL("images/error.svg");
-					await browser.domainProvider.headerAddIcon(
-						error_path,
-						response.message,
-						true, false
-					);
-				}
-			}
+		loadInfoMaildata(message, true, true).catch((error) => {
+			console.error(error);
 		});
 
 		if (isReloadPopupEnabled()) {
