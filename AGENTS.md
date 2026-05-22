@@ -3,7 +3,7 @@
 ## Project Structure & Module Organization
 This repository is a Thunderbird MailExtension (Manifest V3) with source files at the repo root. Core runtime logic is in `background.js` and shared helpers in `functions.js`. UI entry points are `action.html/js`, `popup.html/js`, `options.html/js`, and `tabAnalyze.html/js`. Styling is in `css/`, static icons/assets are in `images/`, and translations are in `_locales/en` and `_locales/sk`. Build artifacts (`*.xpi`) are stored in `build/thunderbird/`.
 
-`popup.html/js` contains the message popup, including the move-to-folder flow and quick folder choices rendered from `localStorage` (`quick_move_folders`).
+`popup.html/js` contains the message popup, including the move-to-folder flow, quick folder choices rendered from `localStorage` (`quick_move_folders`), and explicit `cacheInfoMaildata` requests for email info. `background.js` owns automatic message-display preloading and the popup-triggered on-demand fallback; both paths should use the same mail info loading/cache logic so the popup works even when automatic loading is disabled.
 
 Manifests are split by edition:
 - `manifest-basic.json` for Antispam
@@ -23,15 +23,18 @@ Follow the existing style:
 - Keep semicolons and double-quoted strings consistent with current code.
 - Prefer `const`/`let`; use `var` only when matching surrounding legacy code.
 - Use lowerCamelCase for functions/variables (`webserviceEndpoint`, `isReloadPopupEnabled`).
+- Use existing storage-key style for persisted extension settings (`reload_popup`, `popup_focused`, `auto_email_info_loading`) and keep setting helper functions lowerCamelCase (`isAutoEmailInfoLoadingEnabled`).
 - Keep file names descriptive and aligned to UI context (`popup.js`, `options.js`).
 - For user-facing strings in HTML, use `__MSG_...__`; for runtime strings in JavaScript, use `browser.i18n.getMessage(...)`.
 - When adding or renaming UI text, update both `_locales/en/messages.json` and `_locales/sk/messages.json` in the same change.
+- For settings UI labels, follow the existing locale key style used by the surrounding options page (for example `settingsAutoEmailInfoLoading`).
 
 ## Testing Guidelines
 Automated tests are not currently present. Use manual regression checks before PR:
 1. Load BASIC and PLUS variants.
 2. Verify API calls (endpoint/token), sender/recipient extraction, folder move behavior, and quick move choices in the popup.
-3. Confirm locale strings render in UI and no console errors appear.
+3. Verify `auto_email_info_loading` both enabled and disabled: enabled should preload on message display; disabled should skip background preload but still load email info when the popup requests `cacheInfoMaildata`.
+4. Confirm locale strings render in UI and no console errors appear.
 
 ## Commit & Pull Request Guidelines
 Recent history uses short, lowercase, action-first subjects (for example: `added ...`, `removed ...`, `release v1.17`). Keep commits focused and scoped to one change.  
