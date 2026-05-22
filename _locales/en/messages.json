@@ -188,6 +188,9 @@
 	"reloadPopup": {
 		"message": "Refresh popup window when changing the displayed email"
 	},
+	"settingsAutoEmailInfoLoading": {
+		"message": "Enable automatic email loading"
+	},
 	"popupFocused": {
 		"message": "Focus popup window when refreshing it"
 	}

@@ -363,6 +363,8 @@ async function popupReloadBYTabID(tab_id) {
 // ak sa otvori tab s emailom
 browser.messageDisplay.onMessagesDisplayed.addListener(
 	async (tab, displayedMessages) => {
+		let is_auto_email_info_loading_enabled = fnc.isAutoEmailInfoLoadingEnabled();
+
 		// console.log('otvoril sa tab s emailom');
 		// console.log("tab", tab, JSON.stringify(tab));
 		// console.log("displayedMessages", JSON.stringify(displayedMessages));
@@ -372,14 +374,19 @@ browser.messageDisplay.onMessagesDisplayed.addListener(
 		{
 			await browser.domainProvider.messageBrowserAddCSS(css_filepath);
 			await browser.domainProvider.headerRowClear();
-			// let icon_path = browser.runtime.getURL("images/icon.svg");
-			// await browser.domainProvider.headerAddIcon(icon_path, "Moja ikonka", "moja_ikonka");
-			// await browser.domainProvider.headerAddButton("Tlacitko", icon_path, "moje_tlacitko");
-			let loader_path = browser.runtime.getURL("images/loading.svg");
-			await browser.domainProvider.headerAddIcon(
-				loader_path,
-				browser.i18n.getMessage("loading")
-			);
+			if (is_auto_email_info_loading_enabled) {
+				// let icon_path = browser.runtime.getURL("images/icon.svg");
+				// await browser.domainProvider.headerAddIcon(icon_path, "Moja ikonka", "moja_ikonka");
+				// await browser.domainProvider.headerAddButton("Tlacitko", icon_path, "moje_tlacitko");
+				let loader_path = browser.runtime.getURL("images/loading.svg");
+				await browser.domainProvider.headerAddIcon(
+					loader_path,
+					browser.i18n.getMessage("loading")
+				);
+			}
+		}
+		if (!is_auto_email_info_loading_enabled) {
+			return;
 		}
 
 		var message = displayedMessages.messages[0];

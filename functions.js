@@ -132,6 +132,21 @@ export function toClipboard(text, element) {
 		.catch((err) => console.error("Chyba pri kopírovaní:", err));
 }
 
+export function autoEmailInfoLoading() {
+	let auto_email_info_loading = localStorage.getItem("auto_email_info_loading");
+	if (auto_email_info_loading == null) auto_email_info_loading = "1";
+	return auto_email_info_loading;
+}
+
+export function isAutoEmailInfoLoadingEnabled() {
+	let auto_email_info_loading = autoEmailInfoLoading(); // default is enabled
+	return (
+		auto_email_info_loading == null ||
+		auto_email_info_loading.length <= 0 ||
+		auto_email_info_loading == "1"
+	);
+}
+
 export function formatDate(date) {
 	const pad = (n) => String(n).padStart(2, "0");
 	const year = date.getFullYear();

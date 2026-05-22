@@ -188,6 +188,9 @@
 	"reloadPopup": {
 		"message": "Obnoviť okno pri zmene zobrazeného e-mailu"
 	},
+	"settingsAutoEmailInfoLoading": {
+		"message": "Povolené automatické načítavanie emailov"
+	},
 	"popupFocused": {
 		"message": "Fokusovať popup okno pri jeho obnovení"
 	}
