@@ -108,6 +108,10 @@ messenger.messageDisplay.getDisplayedMessages(tabId).then((message_list) => {
 		(response) => {
 			// console.log("cacheInfoMaildata", response);
 			if (response != null) {
+				if (response.success == false) {
+					webserviceResponseHandler(response, document.getElementById("rules"));
+					return;
+				}
 				printInfoMaidata(response.result);
 			}
 		}
@@ -180,7 +184,10 @@ browser.runtime.onMessage.addListener(function (request, sender, sendResponse) {
 	switch (request.name) {
 		case "infoMaildata":
 			// console.log("infoMaildata", request);
-			if (request.info.success) {
+			if (request.info != null && request.info.success == false) {
+				webserviceResponseHandler(request.info, document.getElementById("rules"));
+			}
+			if (request.info != null && request.info.success) {
 				printInfoMaidata(request.info.result);
 			}
 			break;

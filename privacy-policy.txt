@@ -1,0 +1,98 @@
+Antispam Thunderbird Add-on Privacy Policy
+=========================================
+
+This Privacy Policy applies specifically to the Antispam Thunderbird add-on.
+It is not a general website privacy policy.
+
+Data the add-on reads locally
+-----------------------------
+
+The add-on can read the currently displayed Thunderbird message and extract
+metadata needed for spam/ham analysis and Antispam rules:
+
+- sender email address;
+- recipient email addresses;
+- Reply-To email addresses;
+- sender, recipient and Reply-To domains/subdomains derived from those email
+  addresses;
+- IP addresses extracted from the message Received headers;
+- rule type and rule pattern when the user creates an Antispam rule.
+
+The current implementation does not send the message subject, full email body,
+selected body text, attachments or full message headers to the remote Antispam
+API. It only sends the extracted fields listed above. Standard HTTP request
+metadata, such as request time, IP address, user agent and the configured
+backend URL, may be visible to the remote server automatically as part of the
+HTTP request.
+
+When data is sent
+-----------------
+
+The add-on sends email metadata only after the user explicitly enables the
+Privacy & Data Processing consent checkbox in the add-on settings. The checkbox
+is off by default.
+
+When consent is enabled, data may be sent when:
+
+- Thunderbird displays a message and automatic email info loading is enabled;
+- the popup explicitly requests Antispam information for the displayed message;
+- the user sends message metadata to the Antispam backend;
+- the user creates or updates an Antispam rule.
+
+When consent is disabled, the add-on does not send email data to a remote
+server. It returns a local error message instead of calling the API or legacy
+webservice.
+
+Destination server or service
+-----------------------------
+
+The destination is configured by the user in the add-on settings:
+
+- API mode sends JSON POST requests to the configured API URL.
+- Legacy webservice mode sends POST form-data requests to the configured
+  webservice URL with the antispam service parameter.
+
+The configured API token or legacy webservice token is sent only as needed for
+communication with that configured backend.
+
+Purpose of processing
+---------------------
+
+The data is used only for spam/ham analysis of email messages and for creating
+or updating Antispam rules requested by the user.
+
+Storage and retention
+---------------------
+
+The add-on stores its settings locally in Thunderbird. This includes backend
+URLs, tokens, general settings and the consent setting.
+
+The add-on may cache Antispam analysis results in Thunderbird session storage
+for the current session. This local session cache is used to avoid repeating the
+same check for the same displayed message during the session.
+
+Remote storage and retention depend on the configured Antispam server. The
+add-on cannot determine or control how long a third-party or self-hosted
+backend stores submitted data unless that backend documents it separately.
+
+Sharing with third parties
+--------------------------
+
+The add-on does not share email data with any third party other than the
+configured Antispam backend selected by the user. If the configured backend is
+operated by another organization, that backend operator receives the submitted
+data.
+
+User control
+------------
+
+The user can disable consent at any time in the add-on settings. After consent
+is disabled, the add-on does not send email data to a remote server.
+
+Website detectability
+---------------------
+
+The add-on does not inject content scripts into ordinary web pages and does not
+notify websites that it is installed. Websites are not given an add-on-specific
+signal by this implementation. The configured Antispam backend can of course
+observe HTTP requests that the add-on sends to it when consent is enabled.

@@ -147,6 +147,15 @@ export function isAutoEmailInfoLoadingEnabled() {
 	);
 }
 
+export async function isRemoteDataConsentGranted() {
+	let remote_data_consent = await localGet("remote_data_consent");
+	return remote_data_consent == "1";
+}
+
+export async function setRemoteDataConsentGranted(granted) {
+	await localSet("remote_data_consent", granted ? "1" : "0");
+}
+
 export function formatDate(date) {
 	const pad = (n) => String(n).padStart(2, "0");
 	const year = date.getFullYear();

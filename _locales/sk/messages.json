@@ -193,5 +193,71 @@
 	},
 	"popupFocused": {
 		"message": "Fokusovať popup okno pri jeho obnovení"
+	},
+	"remoteDataConsentRequired": {
+		"message": "Vzdialená spam analýza je vypnutá. Otvorte nastavenia doplnku a povoľte súhlas v sekcii Ochrana súkromia a spracovanie údajov pred odoslaním emailových údajov na server."
+	},
+	"apiURLnotSet": {
+		"message": "API URL nie je nastavená."
+	},
+	"privacyDataProcessing": {
+		"message": "Ochrana súkromia a spracovanie údajov"
+	},
+	"remoteDataConsentLabel": {
+		"message": "Súhlasím, že tento doplnok môže odosielať vybrané emailové údaje na vzdialený server na spam analýzu."
+	},
+	"privacyCurrentApiUrl": {
+		"message": "Aktuálna vzdialená API URL"
+	},
+	"privacyCurrentApiUrlEmpty": {
+		"message": "Pre vybraný backend nie je nastavená žiadna vzdialená API URL."
+	},
+	"privacyUseNotice": {
+		"message": "Vybrané údaje sa používajú iba na spam/ham analýzu správy a na vytvorenie Antispam pravidiel vyžiadaných používateľom."
+	},
+	"privacyNoConsentNotice": {
+		"message": "Checkbox je predvolene vypnutý. Keď je vypnutý, doplnok neodosiela emailové údaje na vzdialený server a namiesto volania API zobrazí lokálnu chybu."
+	},
+	"privacySentDataHeader": {
+		"message": "Údaje, ktoré môžu byť odoslané"
+	},
+	"privacySentDataSender": {
+		"message": "Emailová adresa odosielateľa a odvodené domény/subdomény odosielateľa."
+	},
+	"privacySentDataRecipients": {
+		"message": "Emailové adresy príjemcov a odvodené domény/subdomény príjemcov."
+	},
+	"privacySentDataReplyTo": {
+		"message": "Reply-To emailové adresy a odvodené Reply-To domény/subdomény."
+	},
+	"privacySentDataDomains": {
+		"message": "Domény a subdomény vybrané pre Antispam kontroly alebo pravidlá."
+	},
+	"privacySentDataReceivedIps": {
+		"message": "IP adresy extrahované z Received hlavičiek správy."
+	},
+	"privacySentDataRules": {
+		"message": "Typ pravidla a hodnota pravidla, keď používateľ vytvára Antispam pravidlo."
+	},
+	"privacySentDataAuth": {
+		"message": "Nastavený API token alebo legacy webservice token potrebný na API komunikáciu."
+	},
+	"privacySentDataMetadata": {
+		"message": "Štandardné HTTP metadáta požiadavky, napríklad čas požiadavky, IP adresa, user agent a nastavená backend URL, môžu byť viditeľné vzdialenému serveru."
+	},
+	"privacyPolicyHeader": {
+		"message": "Privacy Policy"
+	},
+	"privacyPolicyText1": {
+		"message": "Tento Thunderbird doplnok číta metadáta správ lokálne v Thunderbirde a odosiela ich iba na nastavené Antispam API alebo legacy webservice po zapnutí súhlasného checkboxu používateľom."
+	},
+	"privacyPolicyText2": {
+		"message": "Doplnok ukladá nastavenia lokálne v Thunderbirde. Vzdialené ukladanie a doba uchovávania závisia od nastaveného Antispam servera; doplnok údaje nezdieľa s inými tretími stranami."
+	},
+	"privacyPolicyText3": {
+		"message": "Doplnok neoznamuje bežným webovým stránkam, že je nainštalovaný. Oprávnenie pre hostiteľa si vyžiada iba pre nastavený backend origin používaný na API komunikáciu."
+	},
+	"privacyPolicyFile": {
+		"message": "Úplné Privacy Policy špecifické pre doplnok je súčasťou repozitára a balíka ako privacy-policy.txt."
 	}
 }

@@ -1,6 +1,6 @@
 import  * as fnc from "./functions.js";
 
-document.addEventListener('DOMContentLoaded', function() {
+document.addEventListener('DOMContentLoaded', async function() {
 	/* ----------------------------------------------------
 	 * Initialize
 	 */
@@ -35,10 +35,18 @@ document.addEventListener('DOMContentLoaded', function() {
 	if (popup_focused == null) popup_focused = '1';
 	document.getElementById('popup_focused').value = popup_focused;
 
+	var remote_data_consent = await fnc.isRemoteDataConsentGranted();
+	document.getElementById('remote_data_consent').checked = remote_data_consent;
+	updatePrivacyCurrentApiUrl();
+
+	document.getElementById('backend_type').addEventListener('change', updatePrivacyCurrentApiUrl);
+	document.getElementById('api_endpoint_url').addEventListener('input', updatePrivacyCurrentApiUrl);
+	document.getElementById('webservice_endpoint_url').addEventListener('input', updatePrivacyCurrentApiUrl);
+
 	/* ----------------------------------------------------
 	 * Button Save onClick
 	 */
-	document.getElementById('antispam_button_save').addEventListener('click', function() {
+	document.getElementById('antispam_button_save').addEventListener('click', async function() {
 		var api_endpoint_url = document.getElementById('api_endpoint_url').value;
 		fnc.requestSitePermission(api_endpoint_url, graned => {
 			if (graned) {
@@ -68,6 +76,11 @@ document.addEventListener('DOMContentLoaded', function() {
 
 		var popup_focused = document.getElementById('popup_focused').value;
 		localStorage.setItem('popup_focused', popup_focused);
+
+		var remote_data_consent = document.getElementById('remote_data_consent').checked;
+		await fnc.setRemoteDataConsentGranted(remote_data_consent);
+		updatePrivacyCurrentApiUrl();
+		showSaveLabel();
 	});
 
 
@@ -75,12 +88,31 @@ document.addEventListener('DOMContentLoaded', function() {
 
 function apiEndpointSave(api_endpoint_url) {
 	localStorage.setItem('api_endpoint_url', api_endpoint_url);
-	document.getElementById('antispam_label_save').classList.remove('hide');
-	setTimeout(function(){ document.getElementById('antispam_label_save').classList.add('hide'); }, 3000);
+	updatePrivacyCurrentApiUrl();
+	showSaveLabel();
 }
 
 function webserviceEndpointSave(webservice_endpoint_url) {
 	localStorage.setItem('webservice_endpoint_url', webservice_endpoint_url);
+	updatePrivacyCurrentApiUrl();
+	showSaveLabel();
+}
+
+function updatePrivacyCurrentApiUrl() {
+	let backend_type = document.getElementById('backend_type').value;
+	let endpoint = '';
+	if (backend_type == 'api') {
+		endpoint = document.getElementById('api_endpoint_url').value.trim();
+	} else {
+		endpoint = document.getElementById('webservice_endpoint_url').value.trim();
+	}
+	if (endpoint.length <= 0) {
+		endpoint = browser.i18n.getMessage('privacyCurrentApiUrlEmpty');
+	}
+	document.getElementById('privacy_current_api_url').textContent = endpoint;
+}
+
+function showSaveLabel() {
 	document.getElementById('antispam_label_save').classList.remove('hide');
 	setTimeout(function(){ document.getElementById('antispam_label_save').classList.add('hide'); }, 3000);
 }

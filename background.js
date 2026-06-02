@@ -13,7 +13,11 @@ import API from './lib/openapi-js-simple/src/API.js';
 const infoMaildataLoading = new Map();
 
 function backendType() {
-	return localStorage.getItem("backend_type");
+	let backend_type = localStorage.getItem("backend_type");
+	if (backend_type == null || backend_type.length <= 0) {
+		return "webservice";
+	}
+	return backend_type;
 }
 
 
@@ -46,7 +50,11 @@ function isSetApiEndpoint() {
 }
 
 function apiToken() {
-	return localStorage.getItem("api_token");
+	var token = localStorage.getItem("api_token");
+	if (token == null || token == undefined) {
+		return "";
+	}
+	return token;
 }
 
 function isReloadPopupEnabled() {
@@ -82,14 +90,45 @@ function appendFormData(formData, data, parentKey = "") {
 	}
 }
 
-function webservice(service, params, callback) {
-	// console.log("webservice", service, params);
-	if (!isSetWebserviceEndpoint()) {
+function localError(message_name) {
+	return {
+		success: false,
+		message: browser.i18n.getMessage(message_name),
+		cacheable: false,
+	};
+}
+
+async function isRemoteRequestAllowed(backend_type, callback) {
+	let error = await remoteRequestError(backend_type);
+	if (error != null) {
 		if (callback != null) {
-			callback({
-				success: false,
-				message: browser.i18n.getMessage("webservceURLnotSet"),
-			});
+			callback(error);
+		}
+		return false;
+	}
+	return true;
+}
+
+async function remoteRequestError(backend_type) {
+	let consent_granted = await fnc.isRemoteDataConsentGranted();
+	if (!consent_granted) {
+		return localError("remoteDataConsentRequired");
+	}
+	if (backend_type == "api" && !isSetApiEndpoint()) {
+		return localError("apiURLnotSet");
+	}
+	if (backend_type == "webservice" && !isSetWebserviceEndpoint()) {
+		return localError("webservceURLnotSet");
+	}
+	return null;
+}
+
+async function webservice(service, params, callback) {
+	// console.log("webservice", service, params);
+	let error = await remoteRequestError("webservice");
+	if (error != null) {
+		if (callback != null) {
+			callback(error);
 		}
 		return false;
 	}
@@ -166,12 +205,15 @@ function apiResponseProcess(response) {
 	return result;
 }
 
-function antispamAddMaildata(maildata, callback) {
+async function antispamAddMaildata(maildata, callback) {
 	let backend_type = backendType();
+	if (!await isRemoteRequestAllowed(backend_type, callback)) {
+		return false;
+	}
 	if (backend_type == "api") {
 		let api = apiClient();
 		if (api == false) {
-			if (callback != null) callback({ status: "ERROR", msg: "API not set" });
+			if (callback != null) callback(localError("apiURLnotSet"));
 			return false;
 		}
 		api
@@ -197,12 +239,15 @@ function antispamAddMaildata(maildata, callback) {
 	}
 }
 
-function antispamCheckMaildata(maildata, callback) {
+async function antispamCheckMaildata(maildata, callback) {
 	let backend_type = backendType();
+	if (!await isRemoteRequestAllowed(backend_type, callback)) {
+		return false;
+	}
 	if (backend_type == "api") {
 		let api = apiClient();
 		if (api == false) {
-			if (callback != null) callback({ status: "ERROR", msg: "API not set" });
+			if (callback != null) callback(localError("apiURLnotSet"));
 			return false;
 		}
 		api
@@ -228,12 +273,15 @@ function antispamCheckMaildata(maildata, callback) {
 	}
 }
 
-function antispamEmailrule(type, pattern, callback) {
+async function antispamEmailrule(type, pattern, callback) {
 	let backend_type = backendType();
+	if (!await isRemoteRequestAllowed(backend_type, callback)) {
+		return false;
+	}
 	if (backend_type == "api") {
 		let api = apiClient();
 		if (api == false) {
-			if (callback != null) callback({ status: "ERROR", msg: "API not set" });
+			if (callback != null) callback(localError("apiURLnotSet"));
 			return false;
 		}
 		api
@@ -308,23 +356,28 @@ async function renderInfoMaildataHeader(response) {
 
 async function loadInfoMaildata(message, notify_popup, render_header) {
 	let message_id = fnc.simpleHash(message.headerMessageId);
-	let response = await fnc.sessionGet("infoMaildata_" + message_id);
+	let response = await remoteRequestError(backendType());
 	if (response == null) {
-		let loading = infoMaildataLoading.get(message_id);
-		if (loading == null) {
-			loading = (async () => {
-				let maildata = await fnc.extractMessageInfo(message);
-				// console.log("maildata", maildata);
-				let info = await antispamCheckMaildataAsync(maildata);
-				await fnc.sessionSet("infoMaildata_" + message_id, info);
-				return info;
-			})();
-			infoMaildataLoading.set(message_id, loading);
-		}
-		try {
-			response = await loading;
-		} finally {
-			infoMaildataLoading.delete(message_id);
+		response = await fnc.sessionGet("infoMaildata_" + message_id);
+		if (response == null) {
+			let loading = infoMaildataLoading.get(message_id);
+			if (loading == null) {
+				loading = (async () => {
+					let maildata = await fnc.extractMessageInfo(message);
+					// console.log("maildata", maildata);
+					let info = await antispamCheckMaildataAsync(maildata);
+					if (info != null && info.cacheable !== false) {
+						await fnc.sessionSet("infoMaildata_" + message_id, info);
+					}
+					return info;
+				})();
+				infoMaildataLoading.set(message_id, loading);
+			}
+			try {
+				response = await loading;
+			} finally {
+				infoMaildataLoading.delete(message_id);
+			}
 		}
 	}
 	if (notify_popup) {
@@ -363,6 +416,10 @@ async function getDisplayedMessageByRequest(request) {
 }
 
 async function cacheInfoMaildata(request) {
+	let error = await remoteRequestError(backendType());
+	if (error != null) {
+		return error;
+	}
 	let info = await fnc.sessionGet("infoMaildata_" + request.messageId);
 	if (info != null) {
 		return info;

@@ -193,5 +193,71 @@
 	},
 	"popupFocused": {
 		"message": "Focus popup window when refreshing it"
+	},
+	"remoteDataConsentRequired": {
+		"message": "Remote spam analysis is disabled. Open the add-on settings and enable Privacy & Data Processing consent before sending email data to the server."
+	},
+	"apiURLnotSet": {
+		"message": "API URL is not set."
+	},
+	"privacyDataProcessing": {
+		"message": "Privacy & Data Processing"
+	},
+	"remoteDataConsentLabel": {
+		"message": "I agree that this add-on may send selected email data to a remote server for spam analysis."
+	},
+	"privacyCurrentApiUrl": {
+		"message": "Current remote API URL"
+	},
+	"privacyCurrentApiUrlEmpty": {
+		"message": "No remote API URL is configured for the selected backend."
+	},
+	"privacyUseNotice": {
+		"message": "The selected data is used only for spam/ham analysis of the message and for creating Antispam rules requested by the user."
+	},
+	"privacyNoConsentNotice": {
+		"message": "The checkbox is off by default. When it is off, the add-on does not send email data to a remote server and shows a local error instead of calling the API."
+	},
+	"privacySentDataHeader": {
+		"message": "Data that may be sent"
+	},
+	"privacySentDataSender": {
+		"message": "Sender email address and derived sender domains/subdomains."
+	},
+	"privacySentDataRecipients": {
+		"message": "Recipient email addresses and derived recipient domains/subdomains."
+	},
+	"privacySentDataReplyTo": {
+		"message": "Reply-To email addresses and derived Reply-To domains/subdomains."
+	},
+	"privacySentDataDomains": {
+		"message": "Domain and subdomain values selected for Antispam checks or rules."
+	},
+	"privacySentDataReceivedIps": {
+		"message": "IP addresses extracted from the message Received headers."
+	},
+	"privacySentDataRules": {
+		"message": "Rule type and rule pattern when the user creates an Antispam rule."
+	},
+	"privacySentDataAuth": {
+		"message": "Configured API token or legacy webservice token needed for API communication."
+	},
+	"privacySentDataMetadata": {
+		"message": "Standard HTTP request metadata, such as request time, IP address, user agent and the configured backend URL, may be visible to the remote server."
+	},
+	"privacyPolicyHeader": {
+		"message": "Privacy Policy"
+	},
+	"privacyPolicyText1": {
+		"message": "This Thunderbird add-on reads message metadata locally in Thunderbird and sends it only to the configured Antispam API or legacy webservice after the user enables the consent checkbox."
+	},
+	"privacyPolicyText2": {
+		"message": "The add-on stores settings locally in Thunderbird. Remote storage and retention depend on the configured Antispam server; the add-on does not share data with other third parties."
+	},
+	"privacyPolicyText3": {
+		"message": "The add-on does not notify ordinary web pages that it is installed. It requests host permission only for the configured backend origin used for API communication."
+	},
+	"privacyPolicyFile": {
+		"message": "The full add-on-specific Privacy Policy is included in this repository and package as privacy-policy.txt."
 	}
 }

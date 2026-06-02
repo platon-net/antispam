@@ -55,6 +55,17 @@ General settings
 | Automatic email info loading | `auto_email_info_loading` | `1` = yes, `0` = no | `1` | When enabled, email info is automatically preloaded when messages are displayed. When disabled, no background preload runs; info is loaded only when explicitly requested, for example when opening the popup. |
 | Focus popup window when refreshing it | `popup_focused` | `1` = yes, `0` = no | `1` | When enabled, the refreshed popup window is focused. |
 
+Privacy and data processing
+---------------------------
+
+The add-on requires an explicit opt-in before it sends email data to a remote backend.
+
+| Setting | Storage key | Values | Default | Description |
+| --- | --- | --- | --- | --- |
+| Remote data processing consent | `antispam_remote_data_consent` | `1` = consent granted, `0` = consent not granted | `0` | When disabled, the add-on shows a local error and does not call the remote API or legacy webservice. |
+
+The options page includes a "Privacy & Data Processing" section with the consent checkbox, the current configured backend URL, a list of data that may be sent, and add-on-specific Privacy Policy text.
+
 Popup preferences
 -----------------
 
@@ -199,4 +210,8 @@ Use API mode for all new deployments. Existing webservice integrations should mi
 Privacy
 =======
 
-The extension processes message metadata such as sender, recipients, reply-to values, subject, received IP addresses, and related domains. Depending on the selected action and settings, this metadata can be sent to the configured Antispam backend.
+The extension processes message metadata such as sender, recipients, reply-to values, received IP addresses, and related domains. The current backend requests do not send the message subject, message body, selected body text, attachments, or full message headers.
+
+Email metadata is sent to the configured Antispam backend only after the user enables the opt-in consent checkbox in the options page. With consent disabled, remote spam analysis and rule API calls are blocked locally before `fetch` is reached.
+
+The add-on-specific Privacy Policy is available in `privacy-policy.txt` and is also summarized directly in the options page.
