@@ -657,7 +657,7 @@ function emailLine(email) {
 function folderLine(folder, prefix) {
 	let option = document.createElement("option");
 	option.value = folder.id;
-	option.textContent = prefix + " 🠢 " + folder.name;
+	option.textContent = prefix + " -> " + folder.name;
 	return option;
 }
 
@@ -667,7 +667,7 @@ function printSubfolders(parent_element, subFolders, parent_name) {
 		printSubfolders(
 			parent_element,
 			subFolders[j].subFolders,
-			parent_name + " 🠢 " + subFolders[j].name
+			parent_name + " -> " + subFolders[j].name
 		);
 	}
 }
