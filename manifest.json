@@ -18,7 +18,7 @@
 		"gecko": {
 			"id": "antispamplus@platon.sk",
 			"strict_min_version": "128.0",
-			"strict_max_version": "144.*"
+			"strict_max_version": "154.*"
 		}
 	},
 	"default_locale": "en",
